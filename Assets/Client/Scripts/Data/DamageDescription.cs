@@ -3,7 +3,7 @@ namespace LD52
     [System.Serializable]
     public struct DamageDescription
     {
-        public DamageType Type;
+        public DamageType DamageType;
         public double Value;
     }
 }

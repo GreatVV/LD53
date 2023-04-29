@@ -62,27 +62,50 @@ namespace LD52
             return 0;
         }
 
-        public void AddDamage(DamageType damageType, CharacteristicBonus value)
+        public void AddDamage(DamageType damageType, double value, double multipler)
         {
             if(Damage.TryGetValue(damageType, out var v))
             {
-                v.Value += value.Value;
-                v.Multipler += value.Multipler;
+                v.Value += value;
+                v.Multipler += multipler;
                 Damage[damageType] = v;
             }
             else
             {
-                Damage[damageType] = value;
+                v = new CharacteristicBonus()
+                {
+                    Value = value,
+                    Multipler = 1d,
+                };
+                
+                Damage[damageType] = v;
             }
         }
 
-        public void RemoveDamage(DamageType damageType, CharacteristicBonus value)
+
+        public void AddDamage(DamageDescription[] damage)
+        {
+            foreach(var d in damage)
+            {
+                AddDamage(d.DamageType, d.Value, 0d);
+            }
+        }
+
+        public void RemoveDamage(DamageType damageType, double value, double multipler)
         {
             if(Damage.TryGetValue(damageType, out var v))
             {
-                v.Value -= value.Value;
-                v.Multipler -= value.Multipler;
+                v.Value -= value;
+                v.Multipler -= multipler;
                 Damage[damageType] = v;
+            }
+        }
+
+        public void RemoveDamage(DamageDescription[] damage)
+        {
+            foreach(var d in damage)
+            {
+                RemoveDamage(d.DamageType, d.Value, 0d);
             }
         }
 
@@ -108,11 +131,28 @@ namespace LD52
             }
         }
 
+
+        public void AddDefence(DefenceDescription[] defence)
+        {
+            foreach(var d in defence)
+            {
+                AddDefence(d.DamageType, d.DefencePercent);
+            }
+        }
+
         public void RemoveDefence(DamageType damageType, double value)
         {
             if(Defence.TryGetValue(damageType, out var oldValue))
             {
                 Defence[damageType] = oldValue - value;
+            }
+        }
+
+        public void RemoveDefence(DefenceDescription[] defence)
+        {
+            foreach(var d in defence)
+            {
+                RemoveDefence(d.DamageType, d.DefencePercent);
             }
         }
     }

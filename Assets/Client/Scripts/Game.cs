@@ -49,6 +49,7 @@ namespace LD52
         {
             Service<EcsWorld>.Set(_world);
             Service<RuntimeData>.Set(RuntimeData);
+            Service<StaticData>.Set(StaticData);
         }
     }
 }

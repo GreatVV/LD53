@@ -21,7 +21,7 @@ namespace LD52
             return characteristics.GetCharacteristic(HealsCharacteristic) * HealsMultipler;
         }
 
-        public double GetDamage(Characteristics damager, Characteristics target, Weapon weapon)
+        public double GetDamage(Characteristics damager, Characteristics target, WeaponData weapon)
         {
             double result = 0;
 
@@ -29,8 +29,8 @@ namespace LD52
 
             foreach(var weaponDamge in weapon.Damage)
             {
-                var dmg = damager.GetDamage(weaponDamge.Type);
-                var defence = target.GetDefence(weaponDamge.Type);
+                var dmg = damager.GetDamage(weaponDamge.DamageType);
+                var defence = target.GetDefence(weaponDamge.DamageType);
                 result += dmg * (100 + mainCharacteristic*10) / 100 * (100 - defence);
             }
 

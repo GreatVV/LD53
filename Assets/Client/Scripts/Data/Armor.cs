@@ -3,7 +3,7 @@ using UnityEngine;
 namespace LD52
 {
     [CreateAssetMenu(menuName = "Game/Armor")]
-    public class Armor : ScriptableObject
+    public class ArmorData : ItemData
     {
         public DefenceDescription[] Defence;
     }
