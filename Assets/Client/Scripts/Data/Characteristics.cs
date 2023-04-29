@@ -1,15 +1,21 @@
 using System.Collections.Generic;
+using Fusion;
 
 namespace LD52
 {
-    public class Characteristics
+    public struct Characteristics : INetworkStruct
     {
         public int Exp;
+
         public int Level;
 
-        private Dictionary<CharacteristicType, CharacteristicBonus> Values = new();
-        private Dictionary<DamageType, CharacteristicBonus> Damage = new();
-        private Dictionary<DamageType, double> Defence = new();
+        [Networked, Capacity(6)] private NetworkDictionary<int, CharacteristicBonus> Values { get; }
+
+        [Networked, Capacity(6)]
+        private NetworkDictionary<int, CharacteristicBonus> Damage { get; }
+        
+        [Networked, Capacity(5)]
+        private NetworkDictionary<int, double> Defence { get; }
 
         public void Add(CharacteristicBonuses bonuses)
         {
@@ -20,11 +26,11 @@ namespace LD52
                     var value = Values[bonus.Type];
                     value.Value += bonus.Value;
                     value.Multipler += bonus.Multipler;
-                    Values[bonus.Type] = value;
+                    Values.Set(bonus.Type, value);
                 }
                 else
                 {
-                    Values[bonus.Type] = bonus;
+                    Values.Set(bonus.Type, bonus);
                 }
             }
         }
@@ -38,14 +44,14 @@ namespace LD52
                     var value = Values[bonus.Type];
                     value.Value -= bonus.Value;
                     value.Multipler -= bonus.Multipler;
-                    Values[bonus.Type] = value;
+                    Values.Set(bonus.Type, value);
                 }
             }
         }
 
         public double GetCharacteristic(CharacteristicType characteristic)
         {
-            if(Values.TryGetValue(characteristic, out var value))
+            if(Values.TryGet(characteristic, out var value))
             {
                 return value.Value * value.Multipler;
             }
@@ -54,7 +60,7 @@ namespace LD52
 
         public double GetDamage(DamageType damageType)
         {
-            if(Damage.TryGetValue(damageType, out var characteristic))
+            if(Damage.TryGet(damageType, out var characteristic))
             {
                 var value = characteristic.Value * characteristic.Multipler;
                 return System.Math.Max(0, value);
@@ -64,11 +70,11 @@ namespace LD52
 
         public void AddDamage(DamageType damageType, double value, double multipler)
         {
-            if(Damage.TryGetValue(damageType, out var v))
+            if(Damage.TryGet(damageType, out var v))
             {
                 v.Value += value;
                 v.Multipler += multipler;
-                Damage[damageType] = v;
+                Damage.Set(damageType, v);
             }
             else
             {
@@ -78,7 +84,7 @@ namespace LD52
                     Multipler = 1d,
                 };
                 
-                Damage[damageType] = v;
+                Damage.Set(damageType, v);
             }
         }
 
@@ -93,11 +99,11 @@ namespace LD52
 
         public void RemoveDamage(DamageType damageType, double value, double multipler)
         {
-            if(Damage.TryGetValue(damageType, out var v))
+            if(Damage.TryGet(damageType, out var v))
             {
                 v.Value -= value;
                 v.Multipler -= multipler;
-                Damage[damageType] = v;
+                Damage.Set(damageType, v);
             }
         }
 
@@ -111,7 +117,7 @@ namespace LD52
 
         public double GetDefence(DamageType damageType)
         {
-            if(Defence.TryGetValue(damageType, out var value))
+            if(Defence.TryGet(damageType, out var value))
             {
                 return value;
             }
@@ -121,13 +127,13 @@ namespace LD52
 
         public void AddDefence(DamageType damageType, double value)
         {
-            if(Defence.TryGetValue(damageType, out var oldValue))
+            if(Defence.TryGet(damageType, out var oldValue))
             {
-                Defence[damageType] = oldValue + value;
+                Defence.Set(damageType, oldValue + value);
             }
             else
             {
-                Defence[damageType] = value;
+                Defence.Set(damageType, value);
             }
         }
 
@@ -142,9 +148,9 @@ namespace LD52
 
         public void RemoveDefence(DamageType damageType, double value)
         {
-            if(Defence.TryGetValue(damageType, out var oldValue))
+            if(Defence.TryGet(damageType, out var oldValue))
             {
-                Defence[damageType] = oldValue - value;
+                Defence.Set(damageType, oldValue - value);
             }
         }
 
