@@ -13,11 +13,7 @@ public class PlayerInputBehaviour : Fusion.Behaviour, INetworkRunnerCallbacks
 	{
 		var frameworkInput = new NetworkInputPrototype();
 
-		if (PlayerMovement.Local && PlayerMovement.Local.activeInteractable == null
-			&& GameManager.Instance
-			&& (GameManager.State.Current == GameState.EGameState.Play
-			|| GameManager.State.Current == GameState.EGameState.Pregame))
-		{
+		
 			if (Input.GetKey(KeyCode.W))
 			{
 				frameworkInput.Buttons.Set(NetworkInputPrototype.BUTTON_FORWARD, true);
@@ -45,12 +41,11 @@ public class PlayerInputBehaviour : Fusion.Behaviour, INetworkRunnerCallbacks
 
 			if (Input.GetMouseButton(0) && EventSystem.current.IsPointerOverGameObject() == false)
 			{
-				frameworkInput.Buttons.Set(NetworkInputPrototype.BUTTON_WALK, true);
+				frameworkInput.Buttons.Set(NetworkInputPrototype.BUTTON_FIRE, true);
 
-				Vector2 mouseVec = new Vector2(Input.mousePosition.x / Screen.width - 0.5f, Input.mousePosition.y / Screen.height - 0.5f);
-				frameworkInput.Yaw = Mathf.Atan2(mouseVec.y, mouseVec.x) * Mathf.Rad2Deg;
+			//	Vector2 mouseVec = new Vector2(Input.mousePosition.x / Screen.width - 0.5f, Input.mousePosition.y / Screen.height - 0.5f);
+			//	frameworkInput.Yaw = Mathf.Atan2(mouseVec.y, mouseVec.x) * Mathf.Rad2Deg;
 			}
-		}
 
 		input.Set(frameworkInput);
 	}

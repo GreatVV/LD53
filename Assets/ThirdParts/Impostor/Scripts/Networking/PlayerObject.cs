@@ -57,8 +57,8 @@ public class PlayerObject : NetworkBehaviour
 	[Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
 	public void Rpc_SetColor(byte c)
 	{
-		if (PlayerRegistry.IsColorAvailable(c))
-			ColorIndex = c;
+	//if (PlayerRegistry.IsColorAvailable(c))
+	//		ColorIndex = c;
 	}
 
 

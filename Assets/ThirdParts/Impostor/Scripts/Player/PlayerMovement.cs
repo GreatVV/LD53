@@ -49,26 +49,26 @@ public class PlayerMovement : NetworkBehaviour
 			if (self.IsDead && TaskUI.ActiveUI) TaskUI.ActiveUI.CloseTask();
 
 			// show nicknames to ghosts
-			if (self.IsDead) GameManager.im.nicknameHolder.gameObject.SetActive(true);
+		//	if (self.IsDead) GameManager.im.nicknameHolder.gameObject.SetActive(true);
 
 			// update ghost visibility
-			PlayerRegistry.ForEachWhere(p => p.Controller.IsDead, p => p.GetComponent<PlayerData>().SetGhost(true));
+		//	PlayerRegistry.ForEachWhere(p => p.Controller.IsDead, p => p.GetComponent<PlayerData>().SetGhost(true));
 
 		}
 
 		self.GetComponent<PlayerData>().SetGhost(self.IsDead);
-
+/*
 		if (GameManager.State.Current == GameState.EGameState.Play && (Local.IsDead || Local.IsSuspect))
 		{
 			AudioManager.Play("SFX_Kill", AudioManager.MixerTarget.SFX, self.transform.position);
-		}
+		}*/
 	}
 
 	static void OnKillTimerChanged(Changed<PlayerMovement> changed)
 	{
 		if (changed.Behaviour == Local && !changed.Behaviour.KillTimer.ExpiredOrNotRunning(GameManager.Instance.Runner))
 		{
-			GameManager.im.gameUI.StartKillTimer();
+		//	GameManager.im.gameUI.StartKillTimer();
 		}
 	}
 
