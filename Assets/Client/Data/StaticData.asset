@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: StaticData
   m_EditorClassIdentifier: 
   Formulas: {fileID: 11400000, guid: ee3fd357ca0b5cf12a5abfe33d1da44e, type: 2}
+  RunnerPrefab: {fileID: 8720124060203113173, guid: 20be554872a4f144aa8687e2e2bf9141,
+    type: 3}
+  Player: {fileID: 7928675630787931478, guid: 070bf8050976065cebeef2e03721091b, type: 3}
