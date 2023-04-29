@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f520fef8887c485af3511cdc90b138, type: 3}
+  m_Name: Bow
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  Prefab: {fileID: 8365358285996017180, guid: 7b3f93e03ab20578cab8f268728c5dcb, type: 3}
+  Name: Bow
+  Coldown: 1
+  Damage:
+  - DamageType: {fileID: 11400000, guid: ff980db0c14608dbc8cfec69fb54aa0c, type: 2}
+    Value: 10
+  Characteristic: {fileID: 11400000, guid: 469d2f6a9f8ccc6358a9502f118ac1b1, type: 2}
+  Pivot: {fileID: 11400000, guid: 7aad073418d4c6922ae4a17e22c676da, type: 2}
+  Animations: {fileID: 22100000, guid: 8821c4151ef049c1fb3044ace7e9b50d, type: 2}
