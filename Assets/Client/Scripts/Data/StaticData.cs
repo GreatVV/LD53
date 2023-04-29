@@ -1,3 +1,4 @@
+using Fusion;
 using UnityEngine;
 
 namespace LD52
@@ -6,5 +7,7 @@ namespace LD52
     public class StaticData : ScriptableObject
     {
         public Formulas Formulas;
+        public NetworkRunner RunnerPrefab;
+        public Character Player;
     }
 }

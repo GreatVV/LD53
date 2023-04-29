@@ -23,6 +23,7 @@ namespace LD52
             InitServices();
             _systems
                 .Add(new InitializeSystem())
+                .Add(new ServerLogicSystem())
                 .Inject(SceneData)
                 .Inject(StaticData)
                 .Inject(RuntimeData)
