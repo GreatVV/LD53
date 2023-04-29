@@ -4,7 +4,8 @@
     {
         public static string ToDescription(this Quest quest)
         {
-            return $@"Take {quest.ItemID} from {quest.From.LocalizedName} and deliver to {quest.To.LocalizedName}";
+            //todo get object back from NetworkID
+            return $@"Take {quest.ItemID} from {quest.From} and deliver to {quest.To}";
         }
     }
 }

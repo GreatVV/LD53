@@ -7,11 +7,11 @@ namespace LD52
     public struct Quest : INetworkStruct
     {
         [Networked]
-        public QuestGiver From { get; set; }
+        public NetworkId From { get; set; }
         [Networked]
-        public QuestTarget To { get; set; }
+        public NetworkId To { get; set; }
         [Networked]
-        public string ItemID { get; set; }
+        public NetworkString<_32> ItemID { get; set; }
         [Networked]
         public QuestState QuestState { get; set; }
     }
