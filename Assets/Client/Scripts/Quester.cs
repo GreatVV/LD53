@@ -7,7 +7,7 @@ namespace LD52
     public class Quester : NetworkBehaviour
     {
         [Networked]
-        public NetworkLinkedList<Quest> TakenQuests { get; set; }
+        public NetworkLinkedList<Quest> TakenQuests { get; }
 
         private bool CanOpenQuestBoard = true;
 

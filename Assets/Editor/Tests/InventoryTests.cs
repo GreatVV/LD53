@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using LD52;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 
 public class InventoryTests
 {

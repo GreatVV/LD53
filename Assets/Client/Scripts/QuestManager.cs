@@ -9,7 +9,7 @@ namespace LD52
 {
     public class QuestManager : NetworkBehaviour, IPointerDownHandler
     {
-        [Networked][Capacity(8)] public NetworkLinkedList<Quest> PossibleQuests { get; set; }
+        [Networked][Capacity(8)] public NetworkLinkedList<Quest> PossibleQuests { get; }
         
         [Networked] public int MaxQuests { get; set; }
 
@@ -42,8 +42,8 @@ namespace LD52
                 {
                     var quest = new Quest();
                     var questGiver = Givers[Random.Range(0, Givers.Length)];
-                    quest.From = questGiver;
-                    quest.To = Targets[Random.Range(0, Targets.Length)];
+                    quest.From = questGiver.Object.Id;
+                    quest.To = Targets[Random.Range(0, Targets.Length)].Object.Id;
                     quest.ItemID = questGiver.PossibleItems[Random.Range(0, questGiver.PossibleItems.Length)].ItemDescription.Id;
                     PossibleQuests.Add(quest);
                 }
