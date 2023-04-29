@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13f520fef8887c485af3511cdc90b138, type: 3}
+  m_Name: Axe
+  m_EditorClassIdentifier: 
+  Icon: {fileID: 0}
+  Prefab: {fileID: 2999748106215116, guid: a9de5a98f016a334c9a1113e07b1a12f, type: 3}
+  Name: Axe
+  Coldown: 1
+  Damage:
+  - DamageType: {fileID: 11400000, guid: 357e224a672638c509d7ce1baa9fe32a, type: 2}
+    Value: 10
+  Characteristic: {fileID: 11400000, guid: 5b620a824c8b61f7a95e279260aadcf8, type: 2}
+  Pivot: {fileID: 11400000, guid: 7aad073418d4c6922ae4a17e22c676da, type: 2}
+  Animations: {fileID: 22100000, guid: 8db8f30d46bd90938815d61e7c96957a, type: 2}
