@@ -34,7 +34,20 @@ namespace LD52
 
         public void StartAttack()
         {
-            Owner.Animator.SetTrigger(AnimationNames.Attack);
+            if(Range)
+            {
+                var projectile = Instantiate(Projectile, ProjectileSpawnPoint.position, Owner.transform.rotation);
+                projectile.Owner = Owner;
+            }
+            else
+            {
+                Collider.enabled = true;
+            }
+        }
+
+        public void EndAttack()
+        {
+            Collider.enabled = false;
         }
 
     }
@@ -45,5 +58,6 @@ namespace LD52
         Character Owner {get; set;}
         WeaponData Data {get; set;}
         void StartAttack();
+        void EndAttack();
     }
 }

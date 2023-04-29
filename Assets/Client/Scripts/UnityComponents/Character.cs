@@ -101,6 +101,16 @@ namespace LD52
             Characteristics.RemoveDefence(item.Defence);
         }
         
+        public void StartAttack()
+        {
+            Weapon.StartAttack();
+        }
+
+        public void EndAttack()
+        {
+            Weapon.EndAttack();
+        }
+        
         public override void FixedUpdateNetwork()
 	    {
             if (Runner.Config.PhysicsEngine == NetworkProjectConfig.PhysicsEngines.None)
