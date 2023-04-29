@@ -3,7 +3,9 @@
     public enum QuestState
     {
         None,
-        InProgress,
+        NeedItem,
+        Delivering,
+        Delivered,
         Completed
     }
 }

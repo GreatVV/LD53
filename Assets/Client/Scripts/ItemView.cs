@@ -1,10 +1,9 @@
-﻿using UnityEngine;
+﻿using Fusion;
 
 namespace LD52
 {
-    public class ItemView : MonoBehaviour
+    public class ItemView : NetworkBehaviour
     {
         public ItemDescription ItemDescription;
-        public string Id => ItemDescription.Id;
     }
 }
