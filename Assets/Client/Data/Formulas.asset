@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c1beb38871da2f0934371a160d68d3, type: 3}
+  m_Name: Formulas
+  m_EditorClassIdentifier: 
+  HealsCharacteristic: {fileID: 11400000, guid: 3728db0ddcc811579aac0486d5cd216c,
+    type: 2}
+  HealsMultipler: 50
+  MinDamage: 0
+  Levels: {fileID: 11400000, guid: d887f67981bd873a5a079de74741210a, type: 2}
+  ExpForKillMultipler: 100
