@@ -199,9 +199,9 @@ MonoBehaviour:
   _interpolationDataSource: 0
   Collider: {fileID: 2677030700685034972}
   Animator: {fileID: 3429104957269450785}
-  cc: {fileID: 0}
+  cc: {fileID: 6990468112116280324}
   TransformLocal: 0
-  Speed: 0
+  Speed: 3
   lookTurnRate: 1.5
   Pivots: {fileID: 2715728623185661979}
   _heals: 0
