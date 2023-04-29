@@ -9,6 +9,9 @@ namespace LD52
 {
     public class Character : NetworkBehaviour
     {
+        [Networked]
+        public NetworkBool IsDead { get; set; }
+        
         public Collider Collider;
         public Animator Animator;
         public KCC cc;
@@ -48,9 +51,13 @@ namespace LD52
 
         public void Dead()
         {
-            if(_isDead) return;
+            if (_isDead)
+            {
+                return;
+            }
             _isDead = true;
             Debug.Log($"{name} is dying");
+            IsDead = true;
             Animator.SetTrigger(AnimationNames.Death);
         }
 

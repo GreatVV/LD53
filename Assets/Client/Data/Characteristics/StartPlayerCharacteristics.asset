@@ -13,15 +13,27 @@ MonoBehaviour:
   m_Name: StartPlayerCharacteristics
   m_EditorClassIdentifier: 
   Values:
-  - Type: {fileID: 11400000, guid: 5b620a824c8b61f7a95e279260aadcf8, type: 2}
-    Value: 1
-    Multipler: 1
-  - Type: {fileID: 11400000, guid: 469d2f6a9f8ccc6358a9502f118ac1b1, type: 2}
-    Value: 1
-    Multipler: 1
-  - Type: {fileID: 11400000, guid: 3728db0ddcc811579aac0486d5cd216c, type: 2}
-    Value: 1
-    Multipler: 1
-  - Type: {fileID: 11400000, guid: 6191f5e525b4bc56ebee061246ec3c87, type: 2}
-    Value: 1
-    Multipler: 1
+  - _Type:
+      Data: 00000000
+    _Value:
+      Data: 0000000000000040
+    _Multipler:
+      Data: 0000000000000040
+  - _Type:
+      Data: 01000000
+    _Value:
+      Data: 0000000000000040
+    _Multipler:
+      Data: 0000000000000040
+  - _Type:
+      Data: 02000000
+    _Value:
+      Data: 0000000000000040
+    _Multipler:
+      Data: 0000000000000040
+  - _Type:
+      Data: 03000000
+    _Value:
+      Data: 0000000000000040
+    _Multipler:
+      Data: 0000000000000040
