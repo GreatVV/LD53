@@ -53,15 +53,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1486282206511352094}
-    - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 4169065612624000632}
-    - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 6273588545389042119}
     - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
       insertIndex: -1
@@ -167,26 +159,6 @@ MonoBehaviour:
     MaxNetworkedCollisions: 4
     MaxNetworkedModifiers: 4
     MaxNetworkedIgnores: 4
---- !u!114 &1486282206511352094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3429104957269450786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 999bdde9a0736c74e9e236b491c099f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  lookTurnRate: 1.5
-  <activeInteractable>k__BackingField: {fileID: 0}
-  _IsDead: 0
-  _IsSuspect: 0
-  _EmergencyMeetingUses: 0
-  TransformLocal: 0
-  Speed: 6
 --- !u!114 &4169065612624000632
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,30 +182,8 @@ MonoBehaviour:
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6990468112116280324}
-  - {fileID: 1486282206511352094}
-  - {fileID: 6273588545389042119}
+  - {fileID: 7928675630787931478}
   SimulationBehaviours: []
---- !u!114 &6273588545389042119
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3429104957269450786}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54506b260b832a0499e9e54c859e3723, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _interpolationDataSource: 0
-  _Index: 0
-  _Nickname:
-    _length: 0
-    _data:
-      Data: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
-  _ColorIndex: 0
-  <Controller>k__BackingField: {fileID: 1486282206511352094}
-  <KillRadiusTrigger>k__BackingField: {fileID: 0}
 --- !u!114 &7928675630787931478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -246,8 +196,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72c1b0e78dcc2be9596d9eadfd3b1083, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   Collider: {fileID: 2677030700685034972}
   Animator: {fileID: 3429104957269450785}
+  cc: {fileID: 6990468112116280324}
+  TransformLocal: 1
+  Speed: 3
+  lookTurnRate: 1
   Pivots: {fileID: 2715728623185661979}
   _heals: 0
   _isDead: 0

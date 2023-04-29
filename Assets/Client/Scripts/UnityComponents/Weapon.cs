@@ -21,6 +21,7 @@ namespace LD52
 
             if(other.TryGetComponent<Character>(out var target))
             {
+                if(target.Characteristics == default) return;
                 var staticData = Service<StaticData>.Get();
                 var damage = staticData.Formulas.GetDamage(Owner.Characteristics, target.Characteristics, Data);
                 Debug.Log($"Damage {damage} from {Owner.name} to {target.name}");

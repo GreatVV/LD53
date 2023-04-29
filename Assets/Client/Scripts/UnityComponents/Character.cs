@@ -1,13 +1,21 @@
 using System.Collections;
+using System.Collections.Generic;
+using Fusion;
+using Fusion.KCC;
 using LeopotamGroup.Globals;
 using UnityEngine;
 
 namespace LD52
 {
-    public class Character : MonoBehaviour
+    public class Character : NetworkBehaviour
     {
         public Collider Collider;
         public Animator Animator;
+        public KCC cc;
+	    readonly FixedInput LocalInput = new FixedInput();
+	    public bool TransformLocal = false;
+        public float Speed;
+	    public float lookTurnRate = 1.5f;
         public Pivots Pivots;
         [Space] [Header("Runtime data")]//How to sync it?
         private RuntimeAnimatorController RuntimeAnimatorController;
@@ -19,17 +27,18 @@ namespace LD52
         [Space] [Header("Start data")]
         public WeaponData WeaponData;
         public CharacteristicBonuses StartCharacteristics;
-
-        private IEnumerator Start()
+        
+        public override void Spawned()
         {
-            yield return default;
+            base.Spawned();
+
             Characteristics = new Characteristics();
             Characteristics.Add(StartCharacteristics);
             var maxHeals = Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             _heals = maxHeals;
             EquipItem(WeaponData);
         }
-        
+
         public void Attack()
         {
             if(_isDead) return;
@@ -39,6 +48,8 @@ namespace LD52
 
         public void Dead()
         {
+            if(_isDead) return;
+            _isDead = true;
             Debug.Log($"{name} is dying");
             Animator.SetTrigger(AnimationNames.Death);
         }
@@ -82,13 +93,81 @@ namespace LD52
         {
             Characteristics.RemoveDefence(item.Defence);
         }
-
-        private void Update()
-        {
-            if(Input.GetKeyDown(KeyCode.Mouse0))
+        
+        public override void FixedUpdateNetwork()
+	    {
+            if (Runner.Config.PhysicsEngine == NetworkProjectConfig.PhysicsEngines.None)
             {
-                Attack();
+                return;
             }
+
+            Vector3 direction = default;
+            if (!_isDead && GetInput(out NetworkInputPrototype input))
+            {
+                // BUTTON_WALK is representing left mouse button
+                if (input.IsDown(NetworkInputPrototype.BUTTON_WALK))
+                {
+                    direction = new Vector3(
+                        Mathf.Cos((float)input.Yaw * Mathf.Deg2Rad),
+                        0,
+                        Mathf.Sin((float)input.Yaw * Mathf.Deg2Rad)
+                    );
+                }
+                else
+                {
+                    if (input.IsDown(NetworkInputPrototype.BUTTON_FORWARD))
+                    {
+                        direction += TransformLocal ? transform.forward : Vector3.forward;
+                    }
+
+                    if (input.IsDown(NetworkInputPrototype.BUTTON_BACKWARD))
+                    {
+                        direction -= TransformLocal ? transform.forward : Vector3.forward;
+                    }
+
+                    if (input.IsDown(NetworkInputPrototype.BUTTON_LEFT))
+                    {
+                        direction -= TransformLocal ? transform.right : Vector3.right;
+                    }
+
+                    if (input.IsDown(NetworkInputPrototype.BUTTON_RIGHT))
+                    {
+                        direction += TransformLocal ? transform.right : Vector3.right;
+                    }
+
+                    if(input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
+                    {
+                        Attack();
+                    }
+
+                    direction = direction.normalized;
+                }
+
+                if (Object.HasInputAuthority && Runner.IsResimulation == false)
+                {
+                    if (LocalInput.GetDown(KeyCode.E))
+                    {
+                     //   TryKill();
+                     //   TryUse(true);
+                     //   TryUse(false);
+                    }
+                }
+            }
+
+            cc.SetInputDirection(direction);
+            cc.SetKinematicVelocity(direction * Speed);
+            
+            if (direction != Vector3.zero)
+            {
+                Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
+                cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, lookTurnRate * 360 * Runner.DeltaTime));
+            }
+            
+            Animator.SetFloat(AnimationNames.DirX, direction.x);
+            Animator.SetFloat(AnimationNames.DirY, direction.y);
+
+            if (Runner.IsResimulation == false)
+                LocalInput.Clear();
         }
 
         public double Heals

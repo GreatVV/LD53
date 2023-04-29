@@ -156,7 +156,7 @@
     "AssembliesToWeave": [
         "Assembly-CSharp",
         "Assembly-CSharp-firstpass",
-        "PhotonVoice.Fusion"
+        "LD52"
     ],
     "UseSerializableDictionary": true,
     "NullChecksForNetworkedProperties": true,
