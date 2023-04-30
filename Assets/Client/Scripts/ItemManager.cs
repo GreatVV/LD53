@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using Fusion;
 using UnityEngine;
 
 namespace LD52
 {
+    [CreateAssetMenu(menuName = "Game/Item Manager")]
     public class ItemManager : ScriptableObject
     {
         public Sprite NoIcon;
@@ -16,6 +18,21 @@ namespace LD52
             }
 
             return NoIcon;
+        }
+
+        public bool TryGetByItemId(string itemID, out ItemView o)
+        {
+            foreach (var x in Items)
+            {
+                if (x.ItemDescription.Id == itemID)
+                {
+                    o = x;
+                    return true;
+                }
+            }
+
+            o = default;
+            return false;
         }
     }
 }

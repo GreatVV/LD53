@@ -11,5 +11,6 @@ namespace LD52
         public Character Player;
         public UI UI;
         public DroppedItem DropPrefab;
+        public ItemManager Items;
     }
 }

@@ -17,6 +17,8 @@ namespace LD52
         [Networked, Capacity(5)]
         private NetworkDictionary<int, double> Defence { get; }
 
+       
+
         public void Add(CharacteristicBonuses bonuses)
         {
             foreach(var bonus in bonuses.Values)

@@ -18,3 +18,6 @@ MonoBehaviour:
   MinDamage: 0
   Levels: {fileID: 11400000, guid: d887f67981bd873a5a079de74741210a, type: 2}
   ExpForKillMultipler: 100
+  CarryingWeightCharacteristic: {fileID: 11400000, guid: 3728db0ddcc811579aac0486d5cd216c,
+    type: 2}
+  CarryingWeightMultiplayer: 10

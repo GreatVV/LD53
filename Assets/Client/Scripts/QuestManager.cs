@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Fusion;
 using Leopotam.Ecs;
 using LeopotamGroup.Globals;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = UnityEngine.Random;
 
@@ -23,6 +25,10 @@ namespace LD52
             {
                 Targets = FindObjectsOfType<QuestTarget>();
                 Givers = FindObjectsOfType<QuestGiver>();
+                for (int i = 0; i < MaxQuests; i++)
+                {
+                    TryGenerateNewQuest();
+                }
             }
 
             Instance = this;
@@ -44,19 +50,27 @@ namespace LD52
                     var questGiver = Givers[Random.Range(0, Givers.Length)];
                     quest.From = questGiver.Object.Id;
                     quest.To = Targets[Random.Range(0, Targets.Length)].Object.Id;
-                    quest.ItemID = questGiver.PossibleItems[Random.Range(0, questGiver.PossibleItems.Length)].ItemDescription.Id;
+                    quest.QuestState = QuestState.ReadyToBeTaken;
+                    var possibleItems = questGiver.PossibleItems.Where(x=>!string.IsNullOrEmpty(x)).ToArray();
+                    var range = Random.Range(0, possibleItems.Length);
+                    quest.ItemID = possibleItems[range];
                     PossibleQuests.Add(quest);
                 }
             }
         }
 
-        [Rpc]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_GiveQuestToPlayer(Quester quester, Quest quest)
         {
             if (Runner.IsServer)
             {
                 PossibleQuests.Remove(quest);
                 quester.TakenQuests.Add(quest);
+            }
+
+            if (Runner.LocalPlayer)
+            {
+                Debug.Log("On local client");
             }
         }
 
