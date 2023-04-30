@@ -26,12 +26,12 @@ namespace LD52
             var runtimeData = Service<RuntimeData>.Get();
             _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity);
             _spawnerCharacter.Dead += DeadHandler;
-       //     EnemySpawned = true;
+            EnemySpawned = true;
         }
 
         public override void FixedUpdateNetwork()
         {
-            Debug.Log("сделай хот что-то мать твою!");
+            //Debug.Log("сделай хот что-то мать твою!");
             if(Runner.IsServer)
             {
                 if(!EnemySpawned)
