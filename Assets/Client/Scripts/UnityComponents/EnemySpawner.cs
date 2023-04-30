@@ -20,12 +20,13 @@ namespace LD52
             Debug.Log("сделай хот что-то мать твою!");
             base.Spawned();
         }
+        
         public void SpawnEnemy()
         {
             var runtimeData = Service<RuntimeData>.Get();
-            _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity, Runner.LocalPlayer);
+            _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity);
             _spawnerCharacter.Dead += DeadHandler;
-            EnemySpawned = true;
+       //     EnemySpawned = true;
         }
 
         public override void FixedUpdateNetwork()
@@ -58,11 +59,12 @@ namespace LD52
 
         private void DeadHandler(Character character)
         {
-            if(Runner.IsServer)
+            var runtimeData = Service<RuntimeData>.Get();
+            if(runtimeData.Runner.IsServer)
             {
                 character.RPC_Respawn();
                 character.cc.SetPosition(GetSpawnPoint());
-                EnemyDead = true;
+    //            EnemyDead = true;
                 _respawnTimer = Coldown;
             }
         }

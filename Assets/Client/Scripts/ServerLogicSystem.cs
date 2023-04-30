@@ -54,6 +54,11 @@ namespace LD52
                 });
             }
 
+            var spawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+            foreach(var spawner in _sceneData.Spawners)
+            {
+                spawner.SpawnEnemy();
+            }
             
         }
 

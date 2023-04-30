@@ -60,7 +60,8 @@ namespace LD52
             }
         }
 
-        public void Attack()
+        [Rpc]
+        public void RPC_Attack()
         {
             if(IsDead) return;
             LastAttackTime = Runner.SimulationTime;
@@ -74,8 +75,9 @@ namespace LD52
             Animator.Play(AnimationNames.Idle);
             Heals = MaxHeals;
         }
-
-        public void Die()
+        
+        [Rpc]
+        public void RPC_Die()
         {
             if (IsDead)
             {
@@ -203,7 +205,7 @@ namespace LD52
                     {
                         if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
                         {
-                            Attack();
+                            RPC_Attack();
                         }
                     }
 
@@ -262,7 +264,7 @@ namespace LD52
                     HealsChanged();
                     if(_heals == 0)
                     {
-                        Die();
+                        RPC_Die();
                     }
                 }
             }
