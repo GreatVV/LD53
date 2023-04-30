@@ -29,6 +29,7 @@ namespace LD52
             StartGameArgs gameArgs = new StartGameArgs()
             {
                 GameMode = GameMode.AutoHostOrClient,
+                Scene = 0,
                 SceneManager = sceneManager
             };
             runner.StartGame(gameArgs);
@@ -52,14 +53,13 @@ namespace LD52
                     }
                     r.SetPlayerObject(player, obj);
                 });
+                
+                var spawners = Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
+                foreach(var spawner in spawners)
+                {
+                    spawner.SpawnEnemy();
+                }
             }
-
-            var spawners = GameObject.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
-            foreach(var spawner in _sceneData.Spawners)
-            {
-                spawner.SpawnEnemy();
-            }
-            
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
