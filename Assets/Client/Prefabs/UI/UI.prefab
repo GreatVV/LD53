@@ -52,6 +52,7 @@ MonoBehaviour:
   QuestBoard: {fileID: 1376460536861136740}
   QuestWindow: {fileID: 4904971157618788664}
   InventoryView: {fileID: 4295702790798621468}
+  HUD: {fileID: 519593197609638112}
 --- !u!1001 &1191975869850998722
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -175,6 +176,18 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fe2d5be03b6f9d14dae322559d1a0f38, type: 3}
+--- !u!114 &519593197609638112 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1711166640734146338, guid: fe2d5be03b6f9d14dae322559d1a0f38,
+    type: 3}
+  m_PrefabInstance: {fileID: 1191975869850998722}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3e055cb202143d58b3c644fd34f4670, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2743988618489129824 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3935623397329616034, guid: fe2d5be03b6f9d14dae322559d1a0f38,

@@ -10,5 +10,6 @@ namespace LD52
         public NetworkRunner RunnerPrefab;
         public Character Player;
         public UI UI;
+        public DroppedItem DropPrefab;
     }
 }

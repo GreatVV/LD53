@@ -14,5 +14,6 @@ namespace LD52
         public QuestBoard QuestBoard;
         public QuestWindow QuestWindow;
         public InventoryView InventoryView;
+        public HUD HUD;
     }
 }

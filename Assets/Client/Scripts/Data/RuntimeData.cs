@@ -9,5 +9,7 @@ namespace LD52
         public NetworkRunner Runner;
         public Inventory Inventory;
         public Quester Quester;
+        public Character PlayerCharacter;
+        public Inventory Inventory;
     }
 }

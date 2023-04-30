@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
@@ -9,12 +10,12 @@ namespace LD52
 {
     public class Character : NetworkBehaviour
     {
-        [Networked]
-        public NetworkBool IsDead { get; set; }
+        public event Action<Character> Dead;
         
         public Collider Collider;
         public Animator Animator;
         public KCC cc;
+        public CharacterUI CharacterUI;
 	    readonly FixedInput LocalInput = new FixedInput();
 	    public bool TransformLocal = false;
         public float Speed;
@@ -24,11 +25,15 @@ namespace LD52
         private RuntimeAnimatorController RuntimeAnimatorController;
         public Characteristics Characteristics;
         public IWeapon Weapon;
+        [Networked] public float LastAttackTime { get; set; }
+        [Networked]
+        public NetworkBool IsDead { get; set; }
         [SerializeField] private double _heals;
-        [SerializeField] private bool _isDead;
 
         [Space] [Header("Start data")]
         public WeaponData WeaponData;
+        public ItemsList DropList;
+
         public CharacteristicBonuses StartCharacteristics;
         
         public override void Spawned()
@@ -38,6 +43,7 @@ namespace LD52
             Characteristics.Add(StartCharacteristics);
             var maxHeals = Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             _heals = maxHeals;
+            HealsChanged();
             EquipItem(WeaponData);
 
             if (Runner.LocalPlayer)
@@ -56,21 +62,49 @@ namespace LD52
 
         public void Attack()
         {
-            if(_isDead) return;
-
+            if(IsDead) return;
+            LastAttackTime = Runner.SimulationTime;
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
-        public void Dead()
+        public void Respawn()
         {
-            if (_isDead)
+            IsDead = false;
+            Animator.Play(AnimationNames.Idle);
+            Heals = MaxHeals;
+        }
+
+        public void Die()
+        {
+            if (IsDead)
             {
                 return;
             }
-            _isDead = true;
-            Debug.Log($"{name} is dying");
             IsDead = true;
+            Debug.Log($"{name} is dying");
             Animator.SetTrigger(AnimationNames.Death);
+            Collider.enabled = false;
+            if(DropList != default)
+            {
+                SpawnDrop();
+                
+            }
+            Dead?.Invoke(this);
+        }
+
+        private void SpawnDrop()
+        {
+            var prefab = Service<StaticData>.Get().DropPrefab;
+            var drop = Runner.Spawn(prefab, transform.position);
+            var item = DropList.GetRandomItem();
+            drop.Show(item);
+        }
+
+        public void Kill(Character other)
+        {
+            var formulas = Service<StaticData>.Get().Formulas;
+            Characteristics.Exp += formulas.GetExp(Characteristics.Level, other.Characteristics.Level);
+            Characteristics.Level = formulas.Levels.GetLevel(Characteristics.Exp);
         }
 
         private void EquipItem(WeaponData item)
@@ -81,7 +115,7 @@ namespace LD52
             }
 
             var parent = Pivots.Get(item.Pivot);
-            var view = Instantiate(item.Prefab, parent);
+            var view = Instantiate(item.Description.Prefab, parent);
             view.transform.localPosition = Vector3.zero;
             view.transform.localRotation = Quaternion.identity;
             view.transform.localScale = Vector3.one;
@@ -131,7 +165,7 @@ namespace LD52
             }
 
             Vector3 direction = default;
-            if (!_isDead && GetInput(out NetworkInputPrototype input))
+            if (!IsDead && GetInput(out NetworkInputPrototype input))
             {
                 // BUTTON_WALK is representing left mouse button
                 if (input.IsDown(NetworkInputPrototype.BUTTON_WALK))
@@ -166,7 +200,10 @@ namespace LD52
 
                     if(input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
                     {
-                        Attack();
+                        if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
+                        {
+                            Attack();
+                        }
                     }
 
                     direction = direction.normalized;
@@ -190,6 +227,11 @@ namespace LD52
             {
                 Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
                 cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, lookTurnRate * 360 * Runner.DeltaTime));
+                Animator.SetFloat(AnimationNames.Speed, Speed);
+            }
+            else
+            {
+                Animator.SetFloat(AnimationNames.Speed, 0);
             }
             
             Animator.SetFloat(AnimationNames.DirX, direction.x);
@@ -199,25 +241,37 @@ namespace LD52
                 LocalInput.Clear();
         }
 
+        private void HealsChanged()
+        {
+            CharacterUI.Refresh(this);
+        }
+
         public double Heals
         {
             get => _heals;
             set
             {
                 var oldValue = _heals;
-                
-                var maxHeals = Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
 
-                var newValue = System.Math.Clamp(value, 0d, maxHeals);
+                var newValue = System.Math.Clamp(value, 0d, MaxHeals);
                 if(oldValue != newValue)
                 {
                     //send event
                     _heals = newValue;
+                    HealsChanged();
                     if(_heals == 0)
                     {
-                        Dead();
+                        Die();
                     }
                 }
+            }
+        }
+
+        public double MaxHeals
+        {
+            get
+            {
+                return Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             }
         }
     }
