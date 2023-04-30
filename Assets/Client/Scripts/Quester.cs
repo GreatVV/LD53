@@ -1,5 +1,6 @@
 ﻿using System;
 using Fusion;
+using LeopotamGroup.Globals;
 using UnityEngine;
 
 namespace LD52
@@ -10,6 +11,15 @@ namespace LD52
         public NetworkLinkedList<Quest> TakenQuests { get; }
 
         private bool CanOpenQuestBoard = true;
+
+        public override void Spawned()
+        {
+            base.Spawned();
+            if (Runner.LocalPlayer)
+            {
+                Service<RuntimeData>.Get().Quester = this;
+            }
+        }
 
         private void OnTriggerEnter(Collider other)
         {
