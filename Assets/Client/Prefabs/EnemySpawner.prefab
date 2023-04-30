@@ -46,10 +46,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
-  _Coldown: 10
+  Coldown: 10
   Prefab: {fileID: 7928675630787931478, guid: d9817b304664dd70788287ba0e46c652, type: 3}
   Radius: 2
   EnemyLevel: 1
+  _EnemySpawned:
+    _value: 0
+  _EnemyDead:
+    _value: 0
 --- !u!114 &5017777014928541576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -65,7 +69,7 @@ MonoBehaviour:
   ObjectInterest: 1
   DefaultInterestGroups: []
   DestroyWhenStateAuthorityLeaves: 0
-  AllowStateAuthorityOverride: 1
+  AllowStateAuthorityOverride: 0
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:

@@ -1,4 +1,5 @@
 using Fusion;
+using LeopotamGroup.Globals;
 using UnityEngine;
 
 namespace LD52
@@ -14,21 +15,27 @@ namespace LD52
         private float _respawnTimer = 0;
         private Character _spawnerCharacter;
 
-        [Rpc]
-        public void RPC_Spawn()
+        public override void Spawned()
         {
-            _spawnerCharacter = Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity, Runner.LocalPlayer);
+            Debug.Log("сделай хот что-то мать твою!");
+            base.Spawned();
+        }
+        public void SpawnEnemy()
+        {
+            var runtimeData = Service<RuntimeData>.Get();
+            _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity, Runner.LocalPlayer);
             _spawnerCharacter.Dead += DeadHandler;
             EnemySpawned = true;
         }
 
         public override void FixedUpdateNetwork()
         {
+            Debug.Log("сделай хот что-то мать твою!");
             if(Runner.IsServer)
             {
                 if(!EnemySpawned)
                 {
-                    RPC_Spawn();
+                    SpawnEnemy();
                 }
                 else if(EnemyDead)
                 {
