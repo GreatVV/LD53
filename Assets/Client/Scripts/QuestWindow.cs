@@ -6,12 +6,15 @@ namespace LD52
     {
         public RectTransform Root;
         public QuestStatusView Prefab;
-        
+
+        public GameObject NoQuestsRoot;
         
         public void Show(Quester quester)
         {
             gameObject.SetActive(true);
             Root.DestroyChildren();
+            
+            NoQuestsRoot.SetActive(quester.TakenQuests.Count == 0);
             
             foreach (var q in quester.TakenQuests)
             {

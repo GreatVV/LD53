@@ -34,12 +34,24 @@ namespace LD52
         public override void Spawned()
         {
             base.Spawned();
-
-            Characteristics = new Characteristics();
+            
             Characteristics.Add(StartCharacteristics);
             var maxHeals = Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             _heals = maxHeals;
             EquipItem(WeaponData);
+
+            if (Runner.LocalPlayer)
+            {
+                var runtimeData = Service<RuntimeData>.Get();
+                if (runtimeData.Inventory != default)
+                {
+                    runtimeData.Inventory = new Inventory()
+                    {
+                        Width = 10,
+                        Height = 8
+                    };
+                }
+            }
         }
 
         public void Attack()

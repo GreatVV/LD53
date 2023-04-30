@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace LD52
 {
     [Serializable]
-    public class Inventory
+    public class Inventory //todo replicate content on host migration?
     {
-        public List<ItemState> Items = new List<ItemState>();
+        public List<ItemState> Items = new();
 
         public int Height
         {

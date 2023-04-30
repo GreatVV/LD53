@@ -18,9 +18,9 @@ namespace LD52
 
         public ItemInfo ItemInfo;
 
-        public void Set(Inventory inventory)
+        public void Show(Inventory inventory)
         {
-            
+            gameObject.SetActive(true);
             var width = inventory.Width;
             var height = inventory.Height;
             Cells = new CellView[width, height];

@@ -16,3 +16,4 @@ MonoBehaviour:
   RunnerPrefab: {fileID: 8720124060203113173, guid: 20be554872a4f144aa8687e2e2bf9141,
     type: 3}
   Player: {fileID: 7928675630787931478, guid: 070bf8050976065cebeef2e03721091b, type: 3}
+  UI: {fileID: 1071306417212883483, guid: 4f7f7985f117e444583baf05770e2e9e, type: 3}

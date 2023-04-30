@@ -16,7 +16,7 @@ namespace LD52
             inventory = new Inventory();
             inventory.Width = Width;
             inventory.Height = Height;
-            InventoryView.Set(inventory); 
+            InventoryView.Show(inventory); 
         }
 
         
