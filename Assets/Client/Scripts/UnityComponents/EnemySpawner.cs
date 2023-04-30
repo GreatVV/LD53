@@ -17,7 +17,6 @@ namespace LD52
 
         public override void Spawned()
         {
-            Debug.Log("сделай хот что-то мать твою!");
             base.Spawned();
         }
         
@@ -31,7 +30,6 @@ namespace LD52
 
         public override void FixedUpdateNetwork()
         {
-            //Debug.Log("сделай хот что-то мать твою!");
             if(Runner.IsServer)
             {
                 if(!EnemySpawned)

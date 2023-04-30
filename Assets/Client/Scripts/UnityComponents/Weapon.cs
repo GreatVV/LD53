@@ -19,10 +19,10 @@ namespace LD52
             DamageHelper.SendDamage(Owner, other, Data);
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_StartAttack()
         {
-            Owner.Stopped = true;
+            Owner.IsStopped = true;
             Owner.ReadyForAttack = true;
         }
 
@@ -33,7 +33,7 @@ namespace LD52
                 Collider.enabled = false;
             }
            
-           Owner.Stopped = false;
+           Owner.IsStopped = false;
         }
 
     }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 /// <summary>
 /// A simple example of Fusion input collection. This component should be on the same GameObject as the <see cref="NetworkRunner"/>.
@@ -57,7 +58,7 @@ public class InputBehaviourPrototype : Fusion.Behaviour, INetworkRunnerCallbacks
       frameworkInput.Buttons.Set(NetworkInputPrototype.BUTTON_RELOAD, true);
     }
 
-    if (Input.GetMouseButton(0)) {
+    if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
       Vector2 mouseVec = new Vector2(Input.mousePosition.x / Screen.width - 0.5f, Input.mousePosition.y / Screen.height - 0.5f);
 			frameworkInput.Yaw = Mathf.Atan2(mouseVec.y, mouseVec.x) * Mathf.Rad2Deg;
       frameworkInput.Buttons.Set(NetworkInputPrototype.BUTTON_FIRE, true);

@@ -20,3 +20,4 @@ MonoBehaviour:
   DropPrefab: {fileID: 3868352401351813435, guid: a7be7731af553e4b08dac71635ec09a6,
     type: 3}
   AllItems: {fileID: 11400000, guid: 7acfeda5b76c1f0479fa64c7c40ac44e, type: 2}
+  Items: {fileID: 11400000, guid: c39e4be61c0567c42be4108e38e950be, type: 2}

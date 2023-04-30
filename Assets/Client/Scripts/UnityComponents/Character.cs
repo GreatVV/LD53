@@ -28,7 +28,7 @@ namespace LD52
         [Networked] public float LastAttackTime { get; set; }
         [Networked]
         public NetworkBool IsDead { get; set; }
-        public bool Stopped;
+        public bool IsStopped;
         [Networked] public float _heals { get; set; }
         public bool ReadyForAttack{get;set;}
 
@@ -62,7 +62,7 @@ namespace LD52
             }
         }
 
-        [Rpc]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_Attack()
         {
             if(IsDead) return;
@@ -70,7 +70,7 @@ namespace LD52
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
-        [Rpc]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_Respawn()
         {
             IsDead = false;
@@ -78,7 +78,7 @@ namespace LD52
             Heals = MaxHeals;
         }
         
-        [Rpc]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_Die()
         {
             if (IsDead)
@@ -112,7 +112,7 @@ namespace LD52
             Characteristics.Level = formulas.Levels.GetLevel(Characteristics.Exp);
         }
 
-        [Rpc]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         private void RPC_EquipItem(string itemID)
         {
             var staticData = Service<StaticData>.Get();
@@ -132,7 +132,7 @@ namespace LD52
             }
 
             var parent = Pivots.Get(item.Pivot);
-            var view = Instantiate(item.Description.Prefab, parent);
+            var view =  Runner.Spawn(item.Description.Prefab, inputAuthority: Runner.LocalPlayer);
             view.transform.localPosition = Vector3.zero;
             view.transform.localRotation = Quaternion.identity;
             view.transform.localScale = Vector3.one;
@@ -194,13 +194,9 @@ namespace LD52
                         0,
                         Mathf.Sin((float)input.Yaw * Mathf.Deg2Rad)
                     );
-                    
-                    if(input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
+                    if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
                     {
-                        if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
-                        {
-                            RPC_Attack();
-                        }
+                        RPC_Attack();
                     }
 
                     isAttack = true;
@@ -251,7 +247,7 @@ namespace LD52
             }
 
             
-            if(isAttack)
+            if(isAttack || IsStopped)
             {
                 cc.SetInputDirection(Vector3.zero);
                 cc.SetKinematicVelocity(Vector3.zero);

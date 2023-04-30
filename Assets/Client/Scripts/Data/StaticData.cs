@@ -12,5 +12,6 @@ namespace LD52
         public UI UI;
         public DroppedItem DropPrefab;
         public ItemsList AllItems;
+        public ItemManager Items;
     }
 }
