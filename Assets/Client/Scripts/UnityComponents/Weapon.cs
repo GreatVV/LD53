@@ -1,10 +1,11 @@
+using Fusion;
 using LeopotamGroup.Globals;
 using NaughtyAttributes;
 using UnityEngine;
 
 namespace LD52
 {
-    public class Weapon : MonoBehaviour, IWeapon
+    public class Weapon : ItemView, IWeapon
     {
         public Collider Collider;
         public bool Range;
@@ -18,23 +19,21 @@ namespace LD52
             DamageHelper.SendDamage(Owner, other, Data);
         }
 
-        public void StartAttack()
+        [Rpc(RpcSources.InputAuthority, RpcTargets.All)]
+        public void RPC_StartAttack()
         {
-            if(Range)
-            {
-                var projectile = Instantiate(Projectile, ProjectileSpawnPoint.position, Owner.transform.rotation);
-                projectile.Owner = Owner;
-                projectile.WeaponData = Data;
-            }
-            else
-            {
-                Collider.enabled = true;
-            }
+            Owner.Stopped = true;
+            Owner.ReadyForAttack = true;
         }
 
         public void EndAttack()
         {
-            Collider.enabled = false;
+            if(Collider != default)
+            {
+                Collider.enabled = false;
+            }
+           
+           Owner.Stopped = false;
         }
 
     }
@@ -54,7 +53,7 @@ namespace LD52
                     return;
                 }
                 var staticData = Service<StaticData>.Get();
-                var damage = staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
+                var damage = (float) staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
                 Debug.Log($"Damage {damage} from {attacker.name} to {target.name}");
                 target.Heals -= damage;
             }

@@ -28,7 +28,9 @@ namespace LD52
         [Networked] public float LastAttackTime { get; set; }
         [Networked]
         public NetworkBool IsDead { get; set; }
-        [SerializeField] private double _heals;
+        public bool Stopped;
+        [Networked] public float _heals { get; set; }
+        public bool ReadyForAttack{get;set;}
 
         [Space] [Header("Start data")]
         public WeaponData WeaponData;
@@ -41,10 +43,10 @@ namespace LD52
             base.Spawned();
             
             Characteristics.Add(StartCharacteristics);
-            var maxHeals = Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
+            var maxHeals = (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             _heals = maxHeals;
             HealsChanged();
-            EquipItem(WeaponData);
+            RPC_EquipItem(WeaponData.Description.Id);
 
             if (Runner.LocalPlayer)
             {
@@ -110,6 +112,18 @@ namespace LD52
             Characteristics.Level = formulas.Levels.GetLevel(Characteristics.Exp);
         }
 
+        [Rpc]
+        private void RPC_EquipItem(string itemID)
+        {
+            var staticData = Service<StaticData>.Get();
+            var item = staticData.AllItems.GetItemById(itemID);
+            if(item != default)
+            {
+                if(item is WeaponData weapon)
+                EquipItem(weapon);
+            }
+        }
+        
         private void EquipItem(WeaponData item)
         {
             if(Weapon != default)
@@ -152,7 +166,7 @@ namespace LD52
         
         public void StartAttack()
         {
-            Weapon.StartAttack();
+            Weapon.RPC_StartAttack();
         }
 
         public void EndAttack()
@@ -167,17 +181,30 @@ namespace LD52
                 return;
             }
 
+            bool isAttack = false;
+
             Vector3 direction = default;
             if (!IsDead && GetInput(out NetworkInputPrototype input))
             {
                 // BUTTON_WALK is representing left mouse button
-                if (input.IsDown(NetworkInputPrototype.BUTTON_WALK))
+                if (input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
                 {
                     direction = new Vector3(
                         Mathf.Cos((float)input.Yaw * Mathf.Deg2Rad),
                         0,
                         Mathf.Sin((float)input.Yaw * Mathf.Deg2Rad)
                     );
+                    
+                    if(input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
+                    {
+                        if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
+                        {
+                            RPC_Attack();
+                        }
+                    }
+
+                    isAttack = true;
+
                 }
                 else
                 {
@@ -201,13 +228,7 @@ namespace LD52
                         direction += TransformLocal ? transform.right : Vector3.right;
                     }
 
-                    if(input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
-                    {
-                        if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
-                        {
-                            RPC_Attack();
-                        }
-                    }
+                   
 
                     direction = direction.normalized;
                 }
@@ -221,24 +242,39 @@ namespace LD52
                      //   TryUse(false);
                     }
                 }
+
+                if(!IsDead && ReadyForAttack)
+                {
+                    Weapon.RPC_StartAttack();
+                    ReadyForAttack = false;
+                }
             }
 
-            cc.SetInputDirection(direction);
-            cc.SetKinematicVelocity(direction * Speed);
+            
+            if(isAttack)
+            {
+                cc.SetInputDirection(Vector3.zero);
+                cc.SetKinematicVelocity(Vector3.zero);
+                Animator.SetFloat(AnimationNames.DirX, 0);
+                Animator.SetFloat(AnimationNames.DirY, 0);
+                Animator.SetFloat(AnimationNames.Speed, 0);
+            }
+            else
+            {
+                cc.SetInputDirection(direction);
+                cc.SetKinematicVelocity(direction * Speed);
+                Animator.SetFloat(AnimationNames.DirX, direction.x);
+                Animator.SetFloat(AnimationNames.DirY, direction.y);
+                Animator.SetFloat(AnimationNames.Speed, Speed * direction.sqrMagnitude);
+            }
+            
             
             if (direction != Vector3.zero)
             {
                 Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
                 cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, lookTurnRate * 360 * Runner.DeltaTime));
-                Animator.SetFloat(AnimationNames.Speed, Speed);
-            }
-            else
-            {
-                Animator.SetFloat(AnimationNames.Speed, 0);
             }
             
-            Animator.SetFloat(AnimationNames.DirX, direction.x);
-            Animator.SetFloat(AnimationNames.DirY, direction.y);
 
             if (Runner.IsResimulation == false)
                 LocalInput.Clear();
@@ -249,14 +285,14 @@ namespace LD52
             CharacterUI.Refresh(this);
         }
 
-        public double Heals
+        public float Heals
         {
             get => _heals;
             set
             {
                 var oldValue = _heals;
 
-                var newValue = System.Math.Clamp(value, 0d, MaxHeals);
+                var newValue = Mathf.Clamp(value, 0f, MaxHeals);
                 if(oldValue != newValue)
                 {
                     //send event
@@ -270,11 +306,11 @@ namespace LD52
             }
         }
 
-        public double MaxHeals
+        public float MaxHeals
         {
             get
             {
-                return Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
+                return (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             }
         }
     }

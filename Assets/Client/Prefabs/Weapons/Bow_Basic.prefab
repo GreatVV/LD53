@@ -43,7 +43,6 @@ GameObject:
   - component: {fileID: 5256741125457613571}
   - component: {fileID: 8004943253650958281}
   - component: {fileID: 4992889230576277805}
-  - component: {fileID: 6403320457971405318}
   - component: {fileID: 7485831036391779799}
   m_Layer: 0
   m_Name: Bow_Basic
@@ -130,22 +129,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 799de6fc93201ee4ebcb238893838a60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Collider: {fileID: 0}
-  Range: 1
-  Projectile: {fileID: 1560266351253019, guid: 1c467566214c98940b816dfcbe9d980d, type: 3}
-  ProjectileSpawnPoint: {fileID: 1554576043977547753}
---- !u!114 &6403320457971405318
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8365358285996017180}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d73d3c9db55e4bb68e049531302e90c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   ItemDescription:
     Id: 
@@ -153,6 +136,10 @@ MonoBehaviour:
     Icon: {fileID: 0}
     Size: {x: 0, y: 0}
     Prefab: {fileID: 0}
+  Collider: {fileID: 0}
+  Range: 1
+  Projectile: {fileID: 1560266351253019, guid: 1c467566214c98940b816dfcbe9d980d, type: 3}
+  ProjectileSpawnPoint: {fileID: 1554576043977547753}
 --- !u!114 &7485831036391779799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -175,5 +162,5 @@ MonoBehaviour:
     RawGuidValue: 7b3f93e03ab20578cab8f268728c5dcb
   NestedObjects: []
   NetworkedBehaviours:
-  - {fileID: 6403320457971405318}
+  - {fileID: 4992889230576277805}
   SimulationBehaviours: []

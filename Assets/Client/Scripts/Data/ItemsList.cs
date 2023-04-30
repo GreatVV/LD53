@@ -12,5 +12,18 @@ namespace LD52
             var r = Random.Range(0, Items.Length);
             return Items[r];
         }
+
+        public ItemData GetItemById(string id)
+        {
+            foreach(var item in Items)
+            {
+                if(item.Description.Id == id)
+                {
+                    return item;
+                }
+            }
+
+            return default;
+        }
     }
 }

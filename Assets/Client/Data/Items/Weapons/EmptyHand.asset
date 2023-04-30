@@ -18,7 +18,7 @@ MonoBehaviour:
     LocalizedName: Empty hands
     Icon: {fileID: 0}
     Size: {x: 1, y: 1}
-    Prefab: {fileID: 3670704510986866239, guid: 475f2fc24cb582f228bfd082313dfa3b,
+    Prefab: {fileID: 2545152326318664844, guid: 475f2fc24cb582f228bfd082313dfa3b,
       type: 3}
   Coldown: 1
   Damage:
