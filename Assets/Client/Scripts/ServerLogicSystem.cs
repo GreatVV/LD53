@@ -13,6 +13,7 @@ namespace LD52
     {
         private RuntimeData _runtimeData;
         private StaticData _staticData;
+        private SceneData _sceneData;
         
         public void Init()
         {
@@ -44,9 +45,16 @@ namespace LD52
             {
                 runner.Spawn(_staticData.Player, inputAuthority:player, onBeforeSpawned: (r, obj) =>
                 {
+                    if(runner.LocalPlayer == player)
+                    {
+                        _sceneData.CameraFollow.Target = obj.transform;
+                        _runtimeData.PlayerCharacter = obj.GetComponent<Character>();
+                    }
                     r.SetPlayerObject(player, obj);
                 });
             }
+
+            
         }
 
         public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)

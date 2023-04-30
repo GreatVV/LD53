@@ -67,7 +67,8 @@ namespace LD52
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
-        public void Respawn()
+        [Rpc]
+        public void RPC_Respawn()
         {
             IsDead = false;
             Animator.Play(AnimationNames.Idle);

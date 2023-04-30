@@ -688,8 +688,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Camera: {fileID: 1227950620}
+  CameraFollow: {fileID: 610150010}
   EntityLinks: []
-  UI: {fileID: 0}
 --- !u!114 &1995419425
 MonoBehaviour:
   m_ObjectHideFlags: 0

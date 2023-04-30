@@ -5,23 +5,41 @@ namespace LD52
 {
     public class EnemySpawner : NetworkBehaviour
     {
-        [Networked] public float Coldown {get; set;}
+        public float Coldown = 10f;
         public Character Prefab;
         public float Radius;
         public int EnemyLevel;
+        [Networked] public NetworkBool EnemySpawned {get; set;}
+        [Networked] public NetworkBool EnemyDead {get; set;}
+        private float _respawnTimer = 0;
+        private Character _spawnerCharacter;
 
-        public override void Spawned()
+        [Rpc]
+        public void RPC_Spawn()
         {
-            base.Spawned();
-            Spawn();
+            _spawnerCharacter = Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity, Runner.LocalPlayer);
+            _spawnerCharacter.Dead += DeadHandler;
+            EnemySpawned = true;
         }
 
-        [ContextMenu("Spawn")]
-        private void Spawn()
+        public override void FixedUpdateNetwork()
         {
-            var character = Runner.Spawn(Prefab, GetSpawnPoint());
-            character.Dead += DeadHandler;
-            Coldown = Runner.SimulationTime;
+            if(Runner.IsServer)
+            {
+                if(!EnemySpawned)
+                {
+                    RPC_Spawn();
+                }
+                else if(EnemyDead)
+                {
+                    _respawnTimer -= Runner.DeltaTime;
+
+                    if(_respawnTimer < 0)
+                    {
+                        Respawn();
+                    }
+                }
+            }
         }
 
         private Vector3 GetSpawnPoint()
@@ -33,8 +51,19 @@ namespace LD52
 
         private void DeadHandler(Character character)
         {
-            character.Respawn();
-            character.cc.SetPosition(GetSpawnPoint());
+            if(Runner.IsServer)
+            {
+                character.RPC_Respawn();
+                character.cc.SetPosition(GetSpawnPoint());
+                EnemyDead = true;
+                _respawnTimer = Coldown;
+            }
+        }
+
+        private void Respawn()
+        {
+            _spawnerCharacter.RPC_Respawn();
+            EnemyDead = false;
         }
 
         private void OnDrawGizmosSelected()
