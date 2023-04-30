@@ -9,5 +9,6 @@ namespace LD52
         public Formulas Formulas;
         public NetworkRunner RunnerPrefab;
         public Character Player;
+        public DroppedItem DropPrefab;
     }
 }

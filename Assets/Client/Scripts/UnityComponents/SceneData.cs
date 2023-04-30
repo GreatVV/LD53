@@ -7,6 +7,7 @@ namespace LD52
     {
         public Camera Camera;
         public EntityLink[] EntityLinks;
+        public UI UI;
 
         [Button]
         public void Grab()

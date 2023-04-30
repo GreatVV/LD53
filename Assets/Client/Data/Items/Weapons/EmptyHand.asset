@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f520fef8887c485af3511cdc90b138, type: 3}
   m_Name: EmptyHand
   m_EditorClassIdentifier: 
-  Icon: {fileID: 0}
   Prefab: {fileID: 7692457981967979492, guid: 475f2fc24cb582f228bfd082313dfa3b, type: 3}
-  Name: Empty hands
+  Description:
+    Id: eh
+    LocalizedName: Empty hands
+    Icon: {fileID: 0}
+    Size: {x: 1, y: 1}
+    Prefab: {fileID: 3670704510986866239, guid: 475f2fc24cb582f228bfd082313dfa3b,
+      type: 3}
   Coldown: 1
   Damage:
   - DamageType: {fileID: 11400000, guid: 357e224a672638c509d7ce1baa9fe32a, type: 2}

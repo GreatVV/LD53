@@ -7,5 +7,7 @@ namespace LD52
     {
         public Diary Diary;
         public NetworkRunner Runner;
+        public Character PlayerCharacter;
+        public Inventory Inventory;
     }
 }

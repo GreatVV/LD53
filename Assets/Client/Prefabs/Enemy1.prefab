@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
       propertyPath: m_Name
-      value: PlayerCharacter Variant
+      value: Enemy1
       objectReference: {fileID: 0}
     - target: {fileID: 4957605393579145646, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
@@ -188,7 +188,7 @@ MonoBehaviour:
   AoiPositionSource: {fileID: 0}
   Flags: 2305
   NetworkGuid:
-    RawGuidValue: 070bf8050976065cebeef2e03721091b
+    RawGuidValue: d9817b304664dd70788287ba0e46c652
   NestedObjects: []
   NetworkedBehaviours:
   - {fileID: 6990468112116280324}
@@ -219,9 +219,9 @@ MonoBehaviour:
   _IsDead:
     _value: 0
   _heals: 0
-  WeaponData: {fileID: 11400000, guid: 74a17e467fd7f0ed08fb54c57fd5ffc6, type: 2}
-  DropList: {fileID: 0}
-  StartCharacteristics: {fileID: 11400000, guid: 5db7defee8317ada9aecd9d5a9bbabba,
+  WeaponData: {fileID: 11400000, guid: ef174654f52988d66809a5e1f424384c, type: 2}
+  DropList: {fileID: 11400000, guid: 0e3debfdaea2bbc1fb324222ecb46e59, type: 2}
+  StartCharacteristics: {fileID: 11400000, guid: 81bf575a2790e8cb1a7edfc3d5cbd40c,
     type: 2}
 --- !u!114 &2715728623185661979
 MonoBehaviour:

@@ -24,6 +24,7 @@ namespace LD52
             _systems
                 .Add(new InitializeSystem())
                 .Add(new ServerLogicSystem())
+                .Add(new InventorySystem())
                 .Inject(SceneData)
                 .Inject(StaticData)
                 .Inject(RuntimeData)
@@ -51,6 +52,7 @@ namespace LD52
             Service<EcsWorld>.Set(_world);
             Service<RuntimeData>.Set(RuntimeData);
             Service<StaticData>.Set(StaticData);
+            Service<UI>.Set(SceneData.UI);
         }
     }
 }
