@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LeopotamGroup.Globals;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace LD52
@@ -21,6 +22,8 @@ namespace LD52
             }
 
             ScrollRect.verticalNormalizedPosition = 1;
+
+            Service<RuntimeData>.Get().Diary.UnreadEntries = 0;
         }
     }
 }
