@@ -6,6 +6,8 @@ namespace LD52
     public class SceneData : MonoBehaviour
     {
         public Camera Camera;
+        public CameraFollow CameraFollow;
+        public EnemySpawner[] Spawners;
         public EntityLink[] EntityLinks;
 
         [Button]

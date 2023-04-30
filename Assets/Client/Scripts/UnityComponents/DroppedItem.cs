@@ -21,6 +21,7 @@ namespace LD52
             View.transform.position = transform.position;
             Data = itemData;
             View.transform.position = Container.position;
+            View.transform.parent = Container;
         }
 
         private void OnTriggerEnter(Collider other)
