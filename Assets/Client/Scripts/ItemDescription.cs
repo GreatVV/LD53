@@ -11,5 +11,6 @@ namespace LD52
         public Sprite Icon;
         public Vector2Int Size;
         public ItemView Prefab;
+        public int Mass;
     }
 }

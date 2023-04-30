@@ -15,6 +15,16 @@ namespace LD52
         public Levels Levels;
         public double ExpForKillMultipler;
 
+        [Header("Carry weight")]
+        public CharacteristicType CarryingWeightCharacteristic;
+
+        public int CarryingWeightMultiplayer = 10;
+        
+        public int GetCarryingCapacity(Characteristics characteristics)
+        {
+            return (int)(characteristics.GetCharacteristic(CarryingWeightCharacteristic) * CarryingWeightMultiplayer);
+        }
+
 
         public double GetHeals(Characteristics characteristics)
         {

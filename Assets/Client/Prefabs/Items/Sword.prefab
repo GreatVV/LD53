@@ -44,9 +44,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d73d3c9db55e4bb68e049531302e90c1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
   ItemDescription:
     Id: Sword
-    LocalizedName: Sword for BOYZZZ
+    LocalizedName: Sword Smoothie
     Icon: {fileID: 21300000, guid: 9db58443aab4a484baefa250a5db43ce, type: 3}
     Size: {x: 1, y: 2}
     Prefab: {fileID: 6843442420597646519}
+    Mass: 0

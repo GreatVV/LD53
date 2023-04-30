@@ -3,6 +3,7 @@
     public enum QuestState
     {
         None,
+        ReadyToBeTaken,
         NeedItem,
         Delivering,
         Delivered,

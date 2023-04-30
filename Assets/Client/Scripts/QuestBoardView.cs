@@ -1,4 +1,5 @@
 ﻿using System;
+using LeopotamGroup.Globals;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +12,7 @@ namespace LD52
         public Quest Quest;
         public Quester Quester;
         public Button Button;
+        public GameObject CantTakeRoot;
 
         private void Start()
         {
@@ -27,19 +29,43 @@ namespace LD52
             Quest = quest;
             Quester = quester;
             Text.text = quest.ToDescription();
+            CantTakeRoot.SetActive(!CanTakeQuest());
         }
 
         private void Update()
         {
-            if (Quest.QuestState != QuestState.None)
+            if (Quest.QuestState != QuestState.ReadyToBeTaken)
             {
                 Destroy(gameObject);
             }
         }
 
+        public bool CanTakeQuest()
+        {
+            if (Quest.QuestState == QuestState.ReadyToBeTaken)
+            {
+                var staticData = Service<StaticData>.Get();
+                var items = staticData.Items;
+                var itemID = Quest.ItemID.ToString();
+                if (items.TryGetByItemId(itemID, out var item))
+                {
+                    var carryingCapacity = staticData.Formulas.GetCarryingCapacity(Quester.GetComponent<Character>().Characteristics);
+                    if (item.ItemDescription.Mass <= carryingCapacity)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
         public void TryTakeQuest()
         {
-            QuestManager.Instance.RPC_GiveQuestToPlayer(Quester, Quest);
+            if (CanTakeQuest())
+            {
+                QuestManager.Instance.RPC_GiveQuestToPlayer(Quester, Quest);
+            }
         }
     }
 }
