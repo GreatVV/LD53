@@ -8,7 +8,7 @@ namespace LD52
     {
         public float Speed;
         public float LifeTime;
-        public Character Owner;
+        public NetworkId Owner;
         public float Radius;
         public Transform CheckForImpactPoint;
         public Weapon Weapon {get;set;}
@@ -37,17 +37,31 @@ namespace LD52
                 var hits = Runner.LagCompensation.OverlapSphere(CheckForImpactPoint.position, Radius, Object.StateAuthority, overlapResults, options: HitOptions.IncludePhysX);
                 for(var i = 0; i < hits; i++)
                 {
-                   
-                    var otherCharacter = overlapResults[i].Collider.GetComponent<Character>();
-                    if(otherCharacter == default || otherCharacter == Owner)
+                    if(overlapResults[i].Hitbox != default)
                     {
-                        continue;
+                        var otherCharacter = overlapResults[i].Hitbox.Root.GetBehaviour<Character>();
+                        if(otherCharacter == default || otherCharacter == Owner)
+                        {
+                            continue;
+                        }
+                        
+                        
+                        var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                        DamageHelper.SendDamage(owner, otherCharacter, Weapon.GetData());
+                        Runner.Despawn(networkObject);
+                        return;
+                        
                     }
-
-                    DamageHelper.SendDamage(Owner, otherCharacter, Weapon.Data);
-                    Runner.Despawn(networkObject);
-                    return;
                 }
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (Runner.IsServer)
+            {
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                DamageHelper.SendDamage(owner, other, Weapon.GetData());
             }
         }
     }

@@ -30,10 +30,26 @@ namespace LD52
         public ref Characteristics Characteristics => ref MakeRef<LD52.Characteristics>();
         public IWeapon Weapon;
         [Networked] public float LastAttackTime { get; set; }
-        [Networked]
+        [Networked(OnChanged = nameof(DeadChanged))]
         public NetworkBool IsDead { get; set; }
         public bool IsStopped;
         [Networked] public float _health { get; set; }
+        [Networked(OnChanged = nameof(WeaponChanged))] public string ChosenWeapon { get; set; }
+
+        public static void WeaponChanged(Changed<Character> changed)
+        {
+            
+        }
+        public static void DeadChanged(Changed<Character> changed)
+        {
+            if (changed.Behaviour.IsDead)
+            {
+                changed.Behaviour.Animator.SetTrigger(AnimationNames.Death);
+                changed.Behaviour.Collider.enabled = false;
+                changed.Behaviour.cc.enabled = false;
+                changed.Behaviour.Dead?.Invoke(changed.Behaviour);
+            }
+        }
         
         public bool ReadyForAttack{get;set;}
 
@@ -107,43 +123,50 @@ namespace LD52
             }
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc]
         public void RPC_Attack()
         {
-            if(IsDead) return;
-            LastAttackTime = Runner.SimulationTime;
-            Weapon.StartAttack();
+            if (IsDead)
+            {
+                return;
+            }
+            
             Animator.SetTrigger(AnimationNames.Attack);
+            
+            if (Object.HasStateAuthority)
+            {
+                LastAttackTime = Runner.SimulationTime;
+                Weapon.StartAttack();
+            }
         }
 
-        [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
+        [Rpc]
         public void RPC_Respawn()
         {
             IsDead = false;
-            Animator.Play(AnimationNames.Walk);
+            Animator.Play(AnimationNames.Idle);
             Health = MaxHeals;
             Collider.enabled = true;
             cc.enabled = true;
         }
         
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc]
         public void RPC_Die()
         {
             if (IsDead)
             {
                 return;
             }
-            IsDead = true;
-            Debug.Log($"{name} is dying");
-            Animator.SetTrigger(AnimationNames.Death);
-            Collider.enabled = false;
-            cc.enabled = false;
-            if(DropList != default)
+
+            if (HasStateAuthority)
             {
-                SpawnDrop();
-                
+                IsDead = true;
+                Debug.Log($"{name} is dying");
+                if(DropList != default)
+                {
+                    SpawnDrop();
+                }
             }
-            Dead?.Invoke(this);
         }
 
         private void SpawnDrop()
@@ -165,41 +188,34 @@ namespace LD52
         [Rpc]
         private void RPC_EquipItem(string itemID)
         {
-            var staticData = Service<StaticData>.Get();
-            var item = staticData.AllItems.GetItemById(itemID);
-            if(item != default)
+            if (Runner.IsServer)
             {
-                if(item is WeaponData weapon)
-                EquipItem(weapon);
+                ChosenWeapon = itemID;
+
+                var staticData = Service<StaticData>.Get();
+                var item = staticData.AllItems.GetItemById(itemID);
+                if (item != default)
+                {
+                    if (item is WeaponData weapon)
+                    {
+                        var view = Runner.Spawn(item.Description.Prefab, onBeforeSpawned: (r, o) =>
+                        {
+                            var w = o.GetComponent<Weapon>();
+                            w.Owner = Object.Id;
+                            w.DataID = itemID;
+                          
+                        });
+                       
+                        if (Weapon != default)
+                        {
+                            UnequipWeapon();
+                        }
+                        Characteristics.AddDamage(weapon.Damage);
+                    }
+                }
             }
         }
         
-        private void EquipItem(WeaponData item)
-        {
-            if(Weapon != default)
-            {
-                UnequipWeapon();
-            }
-
-            var parent = Pivots.Get(item.Pivot);
-            var view =  Runner.Spawn(item.Description.Prefab, inputAuthority: Object.StateAuthority);
-            view.transform.SetParent(parent);
-            view.transform.localPosition = Vector3.zero;
-            view.transform.localRotation = Quaternion.identity;
-            view.transform.localScale = Vector3.one;
-
-            Animator.runtimeAnimatorController = item.Animations;
-
-            if(view.TryGetComponent<IWeapon>(out var weapon))
-            {
-                Weapon = weapon;
-                weapon.Owner = this;
-                weapon.Data = item;
-            }
-
-            Characteristics.AddDamage(item.Damage);
-        }
-
         private void EquipItem(ArmorData item)
         {
             Characteristics.AddDefence(item.Defence);
@@ -207,7 +223,7 @@ namespace LD52
 
         private void UnequipWeapon()
         {
-            Characteristics.RemoveDamage(Weapon.Data.Damage);
+            Characteristics.RemoveDamage(Weapon.GetData().Damage);
         }
 
         private void Unequip(ArmorData item)
@@ -269,4 +285,5 @@ namespace LD52
         [Networked]
         public NetworkString<_32> ItemId { get; set; }
     }
+    
 }

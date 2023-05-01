@@ -8,17 +8,19 @@ namespace LD52
 {
     public class Weapon : ItemView, IWeapon
     {
+        [Networked] public NetworkBool InAttack {get; set;}
+        
         public bool Range;
         [ShowIf(nameof(Range))] public Projectile Projectile;
         [ShowIf(nameof(Range))] public Transform ProjectileSpawnPoint;
-        public Character Owner {get; set;}
-        public WeaponData Data {get; set;}
+        [Networked]
+        public NetworkId Owner {get; set;}
+        [Networked, Capacity(32)]
+        public string DataID {get; set;}
 
         [HideIf(nameof(Range))] public float Distance;
         [HideIf(nameof(Range))] public float Radius;
         [HideIf(nameof(Range))] public float AttackDelay;
-
-        [Networked] public NetworkBool InAttack {get; set;}
 
         private List<LagCompensatedHit> overlapResults = new List<LagCompensatedHit>();
 
@@ -28,7 +30,8 @@ namespace LD52
         {
             if(Object.HasStateAuthority && InAttack)
             {
-                if(!Owner.IsDead)
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                if(!owner.IsDead)
                 {
                     if(_attackDelay.Expired(Runner))
                     {
@@ -46,7 +49,22 @@ namespace LD52
             }
         }
 
-     //   [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public override void Spawned()
+        {
+            base.Spawned();
+            var owner = Runner.FindObject(Owner).GetComponent<Character>();
+            var weaponData = this.GetData();
+            owner.Animator.runtimeAnimatorController = weaponData.Animations;
+            
+            var parent = owner.Pivots.Get(weaponData.Pivot);
+            transform.SetParent(parent);
+            transform.localPosition = Vector3.zero;
+            transform.localRotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+
+            owner.Weapon = this;
+        }
+
         public void StartAttack()
         {
             InAttack = true;
@@ -70,14 +88,16 @@ namespace LD52
                     continue;
                 }
 
-                DamageHelper.SendDamage(Owner, otherCharacter, Data);
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                DamageHelper.SendDamage(owner, otherCharacter, this.GetData());
                 return;
             }
         }
 
         private void ProjectileAttack()
         {
-            var projectile = Runner.Spawn(Projectile, ProjectileSpawnPoint.position, Owner.transform.rotation);
+            var owner = Runner.FindObject(Owner).GetComponent<Character>();
+            var projectile = Runner.Spawn(Projectile, ProjectileSpawnPoint.position, owner.transform.rotation);
             projectile.Owner = Owner;
             projectile.Weapon = this;
             projectile.Fire();
@@ -89,13 +109,14 @@ namespace LD52
             if(Owner != default)
             {
                Gizmos.color = Color.red;
-                Gizmos.DrawWireSphere(GetAttackPoint(), Radius); 
+               Gizmos.DrawWireSphere(GetAttackPoint(), Radius); 
             }
         }
 
         private Vector3 GetAttackPoint()
         {
-            return Owner.transform.position + Owner.transform.forward * Distance;
+            var owner = Runner.FindObject(Owner).GetComponent<Character>();
+            return owner.transform.position + owner.transform.forward * Distance;
         }
     }
 
