@@ -8,7 +8,7 @@ namespace LD52
     {
         public float Speed;
         public float LifeTime;
-        public Character Owner;
+        public NetworkId Owner;
         public float Radius;
         public Transform CheckForImpactPoint;
         public Weapon Weapon {get;set;}
@@ -44,8 +44,10 @@ namespace LD52
                         {
                             continue;
                         }
-
-                        DamageHelper.SendDamage(Owner, otherCharacter, Weapon.Data);
+                        
+                        
+                        var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                        DamageHelper.SendDamage(owner, otherCharacter, Weapon.GetData());
                         Runner.Despawn(networkObject);
                         return;
                         
@@ -56,7 +58,11 @@ namespace LD52
 
         private void OnTriggerEnter(Collider other)
         {
-            DamageHelper.SendDamage(Owner, other, Weapon.Data);
+            if (Runner.IsServer)
+            {
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                DamageHelper.SendDamage(owner, other, Weapon.GetData());
+            }
         }
     }
 }

@@ -38,7 +38,8 @@ namespace LD52
                         0,
                         Mathf.Sin((float)input.Yaw * Mathf.Deg2Rad)
                     );
-                    if(Character.LastAttackTime + Character.Weapon.Data.Coldown < Runner.SimulationTime)
+                    var weaponData = Character.Weapon.GetData();
+                    if(Character.LastAttackTime + weaponData.Coldown < Runner.SimulationTime)
                     {
                         Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
                         Character.cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, 360f));//Character.lookTurnRate * 360 * Runner.DeltaTime));
