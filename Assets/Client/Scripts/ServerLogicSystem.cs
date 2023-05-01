@@ -52,13 +52,6 @@ namespace LD52
             {
                 runner.Spawn(_staticData.Player, inputAuthority:player, onBeforeSpawned: (r, obj) =>
                 {
-                    var character = obj.GetComponent<Character>();
-                    if(runner.LocalPlayer == player)
-                    {
-                        _sceneData.CameraFollow.Target = obj.transform;
-                        _runtimeData.PlayerCharacter = character;
-                    }
-                    
                     r.SetPlayerObject(player, obj);
                 });
                 

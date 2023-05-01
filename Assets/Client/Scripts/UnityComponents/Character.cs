@@ -81,6 +81,8 @@ namespace LD52
             if (Object.HasInputAuthority)
             {
                 var runtimeData = Service<RuntimeData>.Get();
+                Service<SceneData>.Get().CameraFollow.Target = transform;
+                runtimeData.PlayerCharacter = this;
                 if (runtimeData.Inventory != default)
                 {
                     runtimeData.Inventory = new Inventory()

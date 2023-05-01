@@ -54,12 +54,6 @@ namespace LD52
 
         public double GetCharacteristic(in CharacteristicType characteristic)
         {
-            foreach (var pair in Values)
-            {
-                Debug.Log($"Value: {pair.Key}={pair.Value} ({pair.Value.Type} {pair.Value.Value} {pair.Value.Multipler}");
-            }
-            Debug.Log($"For characterstic: {(int)characteristic} ValuesCount: {Values.Count}");
-            
             if(Values.TryGet(characteristic, out var value))
             {
                 return value.Value * value.Multipler;
