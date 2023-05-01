@@ -1,4 +1,5 @@
-﻿using Leopotam.Ecs;
+﻿using System.Collections.Generic;
+using Leopotam.Ecs;
 using UnityEngine;
 
 namespace LD52
@@ -22,17 +23,7 @@ namespace LD52
                     {
                         if (inventoryItems[index].NetworkSyncId != itemDesc.Id)
                         {
-                            for (var index1 = UI.Instance.InventoryView.Icons.Count - 1; index1 >= 0; index1--)
-                            {
-                                var inventoryViewIcon = UI.Instance.InventoryView.Icons[index1];
-                                if (inventoryViewIcon.ItemState == inventoryItems[index])
-                                {
-                                    Object.Destroy(inventoryViewIcon.IconView.gameObject);
-                                    UI.Instance.InventoryView.Icons.RemoveAt(index1);
-                                }
-                            }
-
-                            inventoryItems.RemoveAt(index);
+                            RemoveItemAt(inventoryItems, index);
                             TryAdd(itemDesc, inventory, index);
                         }
                     }
@@ -43,10 +34,19 @@ namespace LD52
 
                     index++;
                 }
-                
+
+                for (int j = inventory.Items.Count - 1; j >= updateInventory.value.Count; j--)
+                {
+                    RemoveItemAt(inventory.Items, j);
+                }
                 
                 _filter.GetEntity(i).Del<UpdateInventory>();
             }
+        }
+
+        private void RemoveItemAt(List<ItemState> inventoryItems, int index)
+        {
+            _runtimeData.Inventory.TryDelete(inventoryItems[index]);   
         }
 
         private void TryAdd(ItemDesc itemDesc, Inventory inventory, int index = -1)

@@ -114,7 +114,7 @@ namespace LD52
             var staticData = Service<StaticData>.Get();
             var damage = (float) staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
             Debug.Log($"Damage {damage} from {attacker.name} to {target.name}");
-            target.Heals -= damage;
+            target.Health -= damage;
         }
 
         public static void SendDamage(Character attacker, Collider targetCollider, WeaponData weaponData)

@@ -17,14 +17,20 @@ namespace LD52
 
         public override void Spawned()
         {
-            base.Spawned();
+            if (Runner.IsServer)
+            {
+                SpawnEnemy();
+            }
         }
         
         public void SpawnEnemy()
         {
             var runtimeData = Service<RuntimeData>.Get();
-            _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity);
-            _spawnerCharacter.Dead += DeadHandler;
+            _spawnerCharacter = runtimeData.Runner.Spawn(Prefab, GetSpawnPoint(), Quaternion.identity, onBeforeSpawned:
+                (r, o) =>
+                {
+                    o.GetComponent<Character>().Dead += DeadHandler;
+                });
             EnemySpawned = true;
         }
 

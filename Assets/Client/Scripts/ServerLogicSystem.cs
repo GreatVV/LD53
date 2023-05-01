@@ -30,10 +30,16 @@ namespace LD52
             {
                 GameMode = GameMode.AutoHostOrClient,
                 Scene = 0,
-                SceneManager = sceneManager
+                SceneManager = sceneManager,
+                Initialized = OnInitialized
             };
             runner.StartGame(gameArgs);
             _runtimeData.Runner = runner;
+        }
+
+        private void OnInitialized(NetworkRunner runner)
+        {
+            
         }
 
         public void Run()
@@ -46,19 +52,17 @@ namespace LD52
             {
                 runner.Spawn(_staticData.Player, inputAuthority:player, onBeforeSpawned: (r, obj) =>
                 {
+                    var character = obj.GetComponent<Character>();
                     if(runner.LocalPlayer == player)
                     {
                         _sceneData.CameraFollow.Target = obj.transform;
-                        _runtimeData.PlayerCharacter = obj.GetComponent<Character>();
+                        _runtimeData.PlayerCharacter = character;
                     }
+                    
                     r.SetPlayerObject(player, obj);
                 });
                 
-                var spawners = Object.FindObjectsByType<EnemySpawner>(FindObjectsSortMode.None);
-                foreach(var spawner in spawners)
-                {
-                    spawner.SpawnEnemy();
-                }
+               
             }
         }
 
