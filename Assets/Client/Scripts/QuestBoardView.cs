@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using LeopotamGroup.Globals;
 using TMPro;
 using UnityEngine;
@@ -34,7 +35,17 @@ namespace LD52
 
         private void Update()
         {
-            if (Quest.QuestState != QuestState.ReadyToBeTaken)
+            bool any = false;
+            foreach (var x in QuestManager.Instance.PossibleQuests)
+            {
+                if (x.Id == Quest.Id)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (!any)
             {
                 Destroy(gameObject);
             }
@@ -64,6 +75,7 @@ namespace LD52
         {
             if (CanTakeQuest())
             {
+                Service<RuntimeData>.Get().Diary.AddEntry(new QuestDiaryEntry(Quest));
                 QuestManager.Instance.RPC_GiveQuestToPlayer(Quester, Quest);
             }
         }

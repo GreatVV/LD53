@@ -21,8 +21,8 @@ namespace LD52
 
             return stringBuilder.ToString();
         }
-        
-        public static bool TryAddItem(this Inventory inventory, ItemDescription itemDescription)
+
+        public static bool TryAddItem(this Inventory inventory, ItemDescription itemDescription, int networkId, int index =-1)
         {
             for (var i = 0; i < inventory.Width; i++)
             {
@@ -58,6 +58,7 @@ namespace LD52
                         if (success)
                         {
                             var itemState = new ItemState();
+                            itemState.NetworkSyncId = networkId;
                             itemState.Position = new Vector2Int(i, j);
                             itemState.ItemDescription = itemDescription;
                             itemState.Amount = 1;
@@ -70,7 +71,14 @@ namespace LD52
                                 }
                             }
 
-                            inventory.Items.Add(itemState);
+                            if (index == -1)
+                            {
+                                inventory.Items.Add(itemState);
+                            }
+                            else
+                            {
+                                inventory.Items.Insert(index, itemState);
+                            }
                             return true;
                         }
                     }

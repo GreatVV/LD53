@@ -27,14 +27,14 @@ namespace LD52
             itemDescription.Size = new Vector2Int(2, 2);
             itemDescription.Id = "x22";
 
-            inventory.TryAddItem(itemDescription);
+            inventory.TryAddItem(itemDescription, 1);
             InventoryView.UpdateView();
         }
         
         [ContextMenu("Add example item")]
         public void AddExampleItem()
         {
-            inventory.TryAddItem(ExampleItem.ItemDescription);
+            inventory.TryAddItem(ExampleItem.ItemDescription, 2);
             InventoryView.UpdateView();
         }
     }

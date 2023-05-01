@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 
 namespace LD52
 {
+    [Serializable]
     public struct Characteristics : INetworkStruct
     {
         public int Exp;
@@ -17,6 +19,7 @@ namespace LD52
         [Networked, Capacity(5)]
         private NetworkDictionary<int, double> Defence { get; }
 
+       
        
 
         public void Add(CharacteristicBonuses bonuses)

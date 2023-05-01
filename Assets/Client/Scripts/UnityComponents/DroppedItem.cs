@@ -28,19 +28,24 @@ namespace LD52
         {
             if(other.TryGetComponent<Character>(out var character))
             {
-                Pick(character);
+                if (Runner.LocalPlayer)
+                {
+                    RPC_Pick(character, Data.Description.Id);
+                }
             }
         }
 
-        private void Pick(Character character)
+        [Rpc]
+        private void RPC_Pick(Character character, string droppedItem)
         {
-            var runtime = Service<RuntimeData>.Get();
-            if(character == runtime.PlayerCharacter)
+            if (Runner.IsServer)
             {
-                if(runtime.Inventory.TryAddItem(Data.Description))
+                character.Items.Add(new ItemDesc()
                 {
-                    Runner.Despawn(Object);
-                }
+                    Id = QuestManager.UniversalId++,
+                    ItemId = droppedItem
+                });
+                Runner.Despawn(Object);
             }
         }
     }

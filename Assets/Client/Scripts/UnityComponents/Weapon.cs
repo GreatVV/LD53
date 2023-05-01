@@ -119,7 +119,7 @@ namespace LD52
 
         public static void SendDamage(Character attacker, Collider targetCollider, WeaponData weaponData)
         {
-            if(targetCollider.gameObject == attacker.gameObject) return;
+            if(!targetCollider || !attacker || targetCollider.gameObject == attacker.gameObject) return;
 
             if(targetCollider.TryGetComponent<Character>(out var target))
             {

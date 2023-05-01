@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace LD52
@@ -11,7 +12,26 @@ namespace LD52
         public void Set(Quest quest)
         {
             Description.text = quest.ToDescription();
-            Status.text = quest.QuestState.ToString();
+            string status;
+            switch (quest.QuestState)
+            {
+                case QuestState.None:
+                case QuestState.ReadyToBeTaken:
+                case QuestState.NeedItem:
+                    status = "Picking up";
+                    break;
+                case QuestState.Delivering:
+                    status = "Delivering";
+                    break;
+                case QuestState.Delivered:
+                case QuestState.Completed:
+                    status = "Completed";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            Status.text = status;
         }
     }
 }

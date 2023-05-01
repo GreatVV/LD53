@@ -25,7 +25,7 @@ public class InventoryTests
         {
             Size = new Vector2Int(1, 1),
             Id = "SingleItem"
-        });
+        }, 0);
         
         Assert.IsTrue(success);
         Assert.AreEqual(0, inventory.Taken[0,0]);
@@ -43,7 +43,7 @@ public class InventoryTests
         {
             Size = new Vector2Int(2, 2),
             Id = "SingleItem"
-        });
+        }, 6);
         
         Assert.IsTrue(success);
         Assert.AreEqual(0, inventory.Taken[0,0]);
@@ -64,13 +64,13 @@ public class InventoryTests
         {
             Size = new Vector2Int(2, 2),
             Id = "SingleItem"
-        });
+        }, 10);
         
         var success2 = inventory.TryAddItem(new ItemDescription()
         {
             Size = new Vector2Int(2, 2),
             Id = "SingleItem"
-        });
+        }, 16);
         
         Assert.IsTrue(success);
         Assert.IsTrue(success2);
@@ -97,7 +97,7 @@ public class InventoryTests
         {
             Size = new Vector2Int(3, 3),
             Id = "SingleItem"
-        });
+        }, 20);
         
         Assert.IsFalse(success);
         Debug.Log( inventory.PrintInventory());

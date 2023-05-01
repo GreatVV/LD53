@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.KCC;
+using Leopotam.Ecs;
 using LeopotamGroup.Globals;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ namespace LD52
 {
     public class Character : NetworkBehaviour
     {
+        [Networked(OnChanged = nameof(ItemsChanged))] [Capacity(20)] public NetworkLinkedList<ItemDesc> Items { get; }
         public event Action<Character> Dead;
         
         public Collider Collider;
@@ -22,13 +24,17 @@ namespace LD52
         public Pivots Pivots;
         [Space] [Header("Runtime data")]//How to sync it?
         private RuntimeAnimatorController RuntimeAnimatorController;
-        public Characteristics Characteristics;
+
+
+        [Networked(OnChanged = nameof(XpChanged))]
+        public Characteristics Characteristics { get; set; }
         public IWeapon Weapon;
         [Networked] public float LastAttackTime { get; set; }
         [Networked]
         public NetworkBool IsDead { get; set; }
         public bool IsStopped;
         [Networked] public float _heals { get; set; }
+        
         public bool ReadyForAttack{get;set;}
 
         [Space] [Header("Start data")]
@@ -36,11 +42,29 @@ namespace LD52
         public ItemsList DropList;
 
         public CharacteristicBonuses StartCharacteristics;
+
+        public static void ItemsChanged( Changed<Character> changed)
+        {
+            if (changed.Behaviour.Runner.LocalPlayer && changed.Behaviour.HasInputAuthority)
+            {
+                Debug.Log("Items changed", changed.Behaviour.gameObject);
+                Service<EcsWorld>.Get().NewEntity().Get<UpdateInventory>().value = changed.Behaviour.Items;
+            }
+        }
+
+        public static void XpChanged(Changed<Character> changed)
+        {
+            var formulas = Service<StaticData>.Get().Formulas;
+            var character = changed.Behaviour;
+            var characteristics = character.Characteristics;
+            characteristics.Level = formulas.Levels.GetLevel(characteristics.Exp);
+            character.Characteristics = characteristics;
+        }
         
         public override void Spawned()
         {
             base.Spawned();
-            
+
             Characteristics.Add(StartCharacteristics);
             var maxHeals = (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             _heals = maxHeals;
@@ -124,8 +148,9 @@ namespace LD52
         public void Kill(Character other)
         {
             var formulas = Service<StaticData>.Get().Formulas;
-            Characteristics.Exp += formulas.GetExp(Characteristics.Level, other.Characteristics.Level);
-            Characteristics.Level = formulas.Levels.GetLevel(Characteristics.Exp);
+            var characteristics = Characteristics;
+            characteristics.Exp += formulas.GetExp(characteristics.Level, other.Characteristics.Level);
+            Characteristics = characteristics;
         }
 
         [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -227,5 +252,19 @@ namespace LD52
                 return (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
             }
         }
+    }
+
+    public struct UpdateInventory
+    {
+        public NetworkLinkedList<ItemDesc> value;
+    }
+
+    [Serializable]
+    public struct ItemDesc : INetworkStruct
+    {
+        [Networked]
+        public int Id { get; set; }
+        [Networked]
+        public NetworkString<_32> ItemId { get; set; }
     }
 }

@@ -16,8 +16,11 @@ namespace LD52
             for (var index = 0; index < questManager.PossibleQuests.Count; index++)
             {
                 var quest = questManager.PossibleQuests[index];
-                var instance = Instantiate(QuestBoardViewPrefabs[index % QuestBoardViewPrefabs.Length], Root);
-                instance.Set(quest, quester);
+                if (quest.QuestState == QuestState.ReadyToBeTaken)
+                {
+                    var instance = Instantiate(QuestBoardViewPrefabs[index % QuestBoardViewPrefabs.Length], Root);
+                    instance.Set(quest, quester);
+                }
             }
         }
     }
