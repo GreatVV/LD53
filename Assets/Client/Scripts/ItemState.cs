@@ -10,6 +10,7 @@ namespace LD52
         public ItemDescription ItemDescription;
         public int Amount;
         public Vector2Int Position;
+        public bool CanBeDropped;
 
         public string GetDescription()
         {

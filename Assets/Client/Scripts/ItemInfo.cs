@@ -40,6 +40,7 @@ namespace LD52
                 Icon.sprite = inventoryIcon.ItemState.ItemDescription.Icon;
                 Info.text = inventoryIcon.ItemState.GetDescription();
                 CurrentItem = inventoryIcon;
+                DropButton.gameObject.SetActive(inventoryIcon.ItemState.CanBeDropped);
             }
             gameObject.SetActive(inventoryIcon != default);
         }
