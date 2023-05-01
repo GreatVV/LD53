@@ -10,7 +10,7 @@ namespace LD52
             var fromName = "Secret guy";
             if (runner.TryFindObject(quest.From, out var giver))
             {
-                fromName = giver.GetComponent<QuestGiver>().LocalizedName;
+                fromName = $"<b>{ giver.GetComponent<QuestGiver>().LocalizedName }</b>";
             }
 
             return fromName;
@@ -22,7 +22,7 @@ namespace LD52
             var toName = "Other Secret guy";
             if (runner.TryFindObject(quest.To, out var target))
             {
-                toName = target.GetComponent<QuestTarget>().LocalizedName;
+                toName = $"<b>{ target.GetComponent<QuestTarget>().LocalizedName }</b>";
             }
 
             return toName;
@@ -34,7 +34,7 @@ namespace LD52
             var items = staticData.Items;
             if (items.TryGetByItemId(quest.ItemID.ToString(), out var item))
             {
-                return item.ItemDescription.LocalizedName;
+                return $"<b>{ item.ItemDescription.LocalizedName }</b>";
             }
 
             return "Secret Item";
