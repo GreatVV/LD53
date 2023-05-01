@@ -15,7 +15,7 @@ namespace LD52
         public override void Spawned()
         {
             base.Spawned();
-            if (Runner.LocalPlayer.IsValid)
+            if (HasInputAuthority)
             {
                 Service<RuntimeData>.Get().Quester = this;
             }
@@ -23,7 +23,7 @@ namespace LD52
 
         private void OnTriggerEnter(Collider other)
         {
-            if (Runner.LocalPlayer.IsValid)
+            if (HasInputAuthority)
             {
                 var questGiver = other.GetComponentInChildren<QuestGiver>();
                 if (questGiver)
@@ -35,6 +35,7 @@ namespace LD52
                             if (takenQuest.From == questGiver)
                             {
                                 Debug.Log("Try to take item from quest giver");
+                                Service<RuntimeData>.Get().Diary.AddEntry(new TakeQuestItemEntry(takenQuest));
                                 QuestManager.Instance.RPC_TakeItemForQuest(this, takenQuest);
                             }
                         }
@@ -57,7 +58,7 @@ namespace LD52
                         }
                     }
                 }
-
+                
                 var questManager = other.GetComponentInChildren<QuestManager>();
                 if (questManager && CanOpenQuestBoard)
                 {
@@ -99,12 +100,13 @@ namespace LD52
 
         public void OnTriggerExit(Collider other)
         {
-            if (Runner.LocalPlayer.IsValid)
+            if (HasInputAuthority)
             {
                 var questManager = other.GetComponentInChildren<QuestManager>();
                 if (questManager)
                 {
                     CanOpenQuestBoard = true;
+                    UI.Instance.QuestBoard.gameObject.SetActive(false);
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace LD52
         {
             if(other.TryGetComponent<Character>(out var character))
             {
-                if (Runner.LocalPlayer)
+                if (HasInputAuthority)
                 {
                     RPC_Pick(character, Data.Description.Id);
                 }
