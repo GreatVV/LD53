@@ -44,7 +44,9 @@ namespace LD52
                 else if(_spawnerCharacter.IsDead && _respawnTimer.Expired(Runner))
                 {
                     _spawnerCharacter.RPC_Respawn();
-                    _spawnerCharacter.cc.SetPosition(GetSpawnPoint());
+                    _spawnerCharacter.IsDead = false;
+                    _spawnerCharacter.Health = _spawnerCharacter.MaxHeals;
+                    _spawnerCharacter.cc.TeleportRPC(GetSpawnPoint(), 0, 0);
                 }
             }
         }

@@ -423,7 +423,7 @@ MonoBehaviour:
     RenderBehavior: 1
     Features: -1
     SpawnColliderOnProxy: 1
-    AllowClientTeleports: 0
+    AllowClientTeleports: 1
     TeleportThreshold: 1
     CCDRadiusMultiplier: 0.75
     AntiJitterDistance: {x: 0, y: 0}
@@ -479,6 +479,7 @@ MonoBehaviour:
     _value: 0
   IsStopped: 0
   __health: 0
+  _ChosenWeapon: 
   WeaponData: {fileID: 11400000, guid: 59bb57633774202b09075026c6af6ab9, type: 2}
   DropList: {fileID: 0}
   StartCharacteristics: {fileID: 11400000, guid: 5db7defee8317ada9aecd9d5a9bbabba,

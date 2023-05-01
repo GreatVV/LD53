@@ -127,12 +127,10 @@ namespace LD52
             }
         }
 
-        [Rpc]
+        [Rpc(RpcSources.All, RpcTargets.All)]
         public void RPC_Respawn()
         {
-            IsDead = false;
-            Animator.Play(AnimationNames.Idle);
-            Health = MaxHeals;
+            Animator.Play(AnimationNames.Walk);
             Collider.enabled = true;
             cc.enabled = true;
         }

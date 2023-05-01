@@ -11,7 +11,7 @@ PrefabInstance:
     - target: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
       propertyPath: m_Name
-      value: Player
+      value: PlayerOld
       objectReference: {fileID: 0}
     - target: {fileID: 4957605393579145646, guid: 4f46098734d87e24490aef9267915ad2,
         type: 3}
@@ -161,7 +161,7 @@ MonoBehaviour:
     RenderBehavior: 1
     Features: -1
     SpawnColliderOnProxy: 1
-    AllowClientTeleports: 0
+    AllowClientTeleports: 1
     TeleportThreshold: 1
     CCDRadiusMultiplier: 0.75
     AntiJitterDistance: {x: 0, y: 0}
@@ -244,6 +244,7 @@ MonoBehaviour:
     _value: 0
   IsStopped: 0
   __health: 0
+  _ChosenWeapon: 
   WeaponData: {fileID: 11400000, guid: 74a17e467fd7f0ed08fb54c57fd5ffc6, type: 2}
   DropList: {fileID: 0}
   StartCharacteristics: {fileID: 11400000, guid: 5db7defee8317ada9aecd9d5a9bbabba,
