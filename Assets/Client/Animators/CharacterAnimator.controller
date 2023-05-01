@@ -188,7 +188,7 @@ BlendTree:
     m_DirectBlendParameter: DirX
     m_Mirror: 0
   - serializedVersion: 2
-    m_Motion: {fileID: -203655887218126122, guid: 65d404b8e6b721745b77dbf7eef4c942,
+    m_Motion: {fileID: -4791504522942941401, guid: 12d3c47a6698c7140a09484893b38121,
       type: 3}
     m_Threshold: 2
     m_Position: {x: 0.01, y: 0}
