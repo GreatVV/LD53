@@ -24,7 +24,7 @@ MonoBehaviour:
   Coldown: 1
   Damage:
   - DamageType: {fileID: 11400000, guid: ff980db0c14608dbc8cfec69fb54aa0c, type: 2}
-    Value: 10
+    Value: 20
   Characteristic: {fileID: 11400000, guid: 469d2f6a9f8ccc6358a9502f118ac1b1, type: 2}
   Pivot: {fileID: 11400000, guid: 019f424c92315156291b58bf92625138, type: 2}
   Animations: {fileID: 22100000, guid: 8821c4151ef049c1fb3044ace7e9b50d, type: 2}

@@ -37,26 +37,18 @@ namespace LD52
                 var hits = Runner.LagCompensation.OverlapSphere(CheckForImpactPoint.position, Radius, Object.StateAuthority, overlapResults, options: HitOptions.IncludePhysX);
                 for(var i = 0; i < hits; i++)
                 {
-                    if(overlapResults[i].Hitbox != default)
+                   
+                    var otherCharacter = overlapResults[i].Collider.GetComponent<Character>();
+                    if(otherCharacter == default || otherCharacter == Owner)
                     {
-                        var otherCharacter = overlapResults[i].Hitbox.Root.GetBehaviour<Character>();
-                        if(otherCharacter == default || otherCharacter == Owner)
-                        {
-                            continue;
-                        }
-
-                        DamageHelper.SendDamage(Owner, otherCharacter, Weapon.Data);
-                        Runner.Despawn(networkObject);
-                        return;
-                        
+                        continue;
                     }
+
+                    DamageHelper.SendDamage(Owner, otherCharacter, Weapon.Data);
+                    Runner.Despawn(networkObject);
+                    return;
                 }
             }
-        }
-
-        private void OnTriggerEnter(Collider other)
-        {
-            DamageHelper.SendDamage(Owner, other, Weapon.Data);
         }
     }
 }

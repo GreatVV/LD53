@@ -136,10 +136,15 @@ MonoBehaviour:
     Icon: {fileID: 0}
     Size: {x: 0, y: 0}
     Prefab: {fileID: 0}
-  Collider: {fileID: 0}
+    Mass: 0
   Range: 1
   Projectile: {fileID: 1560266351253019, guid: 1c467566214c98940b816dfcbe9d980d, type: 3}
   ProjectileSpawnPoint: {fileID: 1554576043977547753}
+  Distance: 0
+  Radius: 0
+  AttackDelay: 0.3
+  _InAttack:
+    _value: 0
 --- !u!114 &7485831036391779799
 MonoBehaviour:
   m_ObjectHideFlags: 0

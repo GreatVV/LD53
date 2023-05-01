@@ -114,11 +114,11 @@ namespace LD52
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.StateAuthority, RpcTargets.StateAuthority)]
         public void RPC_Respawn()
         {
             IsDead = false;
-            Animator.Play(AnimationNames.Idle);
+            Animator.Play(AnimationNames.Walk);
             Health = MaxHeals;
             Collider.enabled = true;
             cc.enabled = true;
@@ -160,7 +160,7 @@ namespace LD52
             Characteristics = characteristics;
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc]
         private void RPC_EquipItem(string itemID)
         {
             var staticData = Service<StaticData>.Get();
@@ -180,7 +180,7 @@ namespace LD52
             }
 
             var parent = Pivots.Get(item.Pivot);
-            var view =  Runner.Spawn(item.Description.Prefab, inputAuthority: Runner.LocalPlayer);
+            var view =  Runner.Spawn(item.Description.Prefab, inputAuthority: Object.StateAuthority);
             view.transform.SetParent(parent);
             view.transform.localPosition = Vector3.zero;
             view.transform.localRotation = Quaternion.identity;

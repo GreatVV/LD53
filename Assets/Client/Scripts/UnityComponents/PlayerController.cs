@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -6,7 +7,11 @@ namespace LD52
     public class PlayerController : NetworkBehaviour
     {
         public Character Character;
+        public float PickItemRadius;
+        public float PickItemColdown;
+        private TickTimer _pickItemTimer;
 	    readonly FixedInput LocalInput = new FixedInput();
+        private List<LagCompensatedHit> overlapResults = new List<LagCompensatedHit>();
 
         public override void FixedUpdateNetwork()
 	    {
@@ -24,6 +29,8 @@ namespace LD52
 
                 return;
             }
+
+            TryPickItem();
 
             bool isAttack = false;
 
@@ -100,6 +107,42 @@ namespace LD52
                 Character.cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, Character.lookTurnRate * 360 * Runner.DeltaTime));
             }
             
+        }
+
+        private void TryPickItem()
+        {
+            if(Object.HasStateAuthority && _pickItemTimer.ExpiredOrNotRunning(Runner))
+            {
+                _pickItemTimer = TickTimer.CreateFromSeconds(Runner, PickItemColdown);
+                
+                var hits = Runner.LagCompensation.OverlapSphere(transform.position, PickItemRadius, Object.StateAuthority, overlapResults, options: HitOptions.IncludePhysX);
+                
+                for(var i = 0; i < hits; i++)
+                {
+                    var droppedItem = overlapResults[i].Collider.GetComponent<DroppedItem>();
+
+                    if(droppedItem == default)
+                    {
+                        continue;
+                    }
+
+                    RPC_Pick(Character, droppedItem.Data.Description.Id);
+                    Runner.Despawn(droppedItem.Object);
+                }
+            }
+        }
+        
+        [Rpc]
+        private void RPC_Pick(Character character, string droppedItem)
+        {
+            if (Runner.IsServer)
+            {
+                character.Items.Add(new ItemDesc()
+                {
+                    Id = QuestManager.UniversalId++,
+                    ItemId = droppedItem
+                });
+            }
         }
     }
 }
