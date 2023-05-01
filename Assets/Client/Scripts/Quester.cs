@@ -23,7 +23,7 @@ namespace LD52
 
         private void OnTriggerEnter(Collider other)
         {
-            if (HasStateAuthority)
+            if (HasInputAuthority)
             {
                 var questGiver = other.GetComponentInChildren<QuestGiver>();
                 if (questGiver)
@@ -35,6 +35,7 @@ namespace LD52
                             if (takenQuest.From == questGiver)
                             {
                                 Debug.Log("Try to take item from quest giver");
+                                Service<RuntimeData>.Get().Diary.AddEntry(new TakeQuestItemEntry(takenQuest));
                                 QuestManager.Instance.RPC_TakeItemForQuest(this, takenQuest);
                             }
                         }
@@ -57,10 +58,7 @@ namespace LD52
                         }
                     }
                 }
-            }
-
-            if (HasInputAuthority)
-            {
+                
                 var questManager = other.GetComponentInChildren<QuestManager>();
                 if (questManager && CanOpenQuestBoard)
                 {

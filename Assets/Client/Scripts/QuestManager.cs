@@ -82,11 +82,6 @@ namespace LD52
                 }
                 quester.TakenQuests.Add(quest);
             }
-
-            if (Runner.LocalPlayer.IsValid)
-            {
-                Debug.Log("On local client");
-            }
         }
 
         public void OnPointerDown(PointerEventData eventData)
