@@ -5,6 +5,7 @@ using Fusion;
 using Fusion.Sockets;
 using Leopotam.Ecs;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace LD52
@@ -29,7 +30,7 @@ namespace LD52
             StartGameArgs gameArgs = new StartGameArgs()
             {
                 GameMode = GameMode.AutoHostOrClient,
-                Scene = 0,
+                Scene = SceneManager.GetActiveScene().buildIndex,
                 SceneManager = sceneManager,
                 Initialized = OnInitialized
             };
@@ -50,12 +51,12 @@ namespace LD52
         {
             if (runner.IsServer)
             {
-                runner.Spawn(_staticData.Player, inputAuthority:player, onBeforeSpawned: (r, obj) =>
+                var position = _sceneData.PlayerSpawnPosition.position;
+                Debug.Log(position);
+                runner.Spawn(_staticData.Player, position, _sceneData.PlayerSpawnPosition.rotation, inputAuthority:player, onBeforeSpawned: (r, obj) =>
                 {
                     r.SetPlayerObject(player, obj);
                 });
-                
-               
             }
         }
 

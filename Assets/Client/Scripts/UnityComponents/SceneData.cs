@@ -9,6 +9,7 @@ namespace LD52
         public CameraFollow CameraFollow;
         public EnemySpawner[] Spawners;
         public EntityLink[] EntityLinks;
+        public Transform PlayerSpawnPosition;
 
         [Button]
         public void Grab()
