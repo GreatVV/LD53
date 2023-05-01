@@ -12,16 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f520fef8887c485af3511cdc90b138, type: 3}
   m_Name: Axe
   m_EditorClassIdentifier: 
-  Prefab: {fileID: 2999748106215116, guid: a9de5a98f016a334c9a1113e07b1a12f, type: 3}
-  Description:
-    Id: axe1
-    LocalizedName: Axe
-    Icon: {fileID: 21300000, guid: 6a20f4dbf06be284e860c0bf6799923a, type: 3}
-    Size: {x: 2, y: 2}
-    Prefab: {fileID: 3589558904868518448, guid: a9de5a98f016a334c9a1113e07b1a12f,
-      type: 3}
-    Mass: 0
-  Coldown: 1
+  Prefab: {fileID: 3589558904868518448, guid: a9de5a98f016a334c9a1113e07b1a12f, type: 3}
+  Coldown: 0.5
   Damage:
   - DamageType: {fileID: 11400000, guid: 357e224a672638c509d7ce1baa9fe32a, type: 2}
     Value: 10

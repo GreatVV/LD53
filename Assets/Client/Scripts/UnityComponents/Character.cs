@@ -33,7 +33,7 @@ namespace LD52
         [Networked(OnChanged = nameof(DeadChanged))]
         public NetworkBool IsDead { get; set; }
         public bool IsStopped;
-        [Networked] public float _health { get; set; }
+        [Networked(OnChanged = nameof(HealthChanged))] public float _health { get; set; }
         [Networked(OnChanged = nameof(WeaponChanged))] public string ChosenWeapon { get; set; }
 
         public static void WeaponChanged(Changed<Character> changed)
@@ -106,19 +106,6 @@ namespace LD52
                         Width = 10,
                         Height = 8
                     };
-                }
-            }
-        }
-
-        public override void FixedUpdateNetwork()
-        {
-            base.FixedUpdateNetwork();
-            if(Runner.IsServer)
-            {
-                if(!IsDead && ReadyForAttack)
-                {
-                //    Weapon.RPC_StartAttack();
-                //    ReadyForAttack = false;
                 }
             }
         }
@@ -244,6 +231,10 @@ namespace LD52
         //    Weapon.EndAttack();
         }
 
+        public static void HealthChanged(Changed<Character> changed)
+        {
+            changed.Behaviour.HealsChanged();
+        }
         private void HealsChanged()
         {
             CharacterUI.Refresh(this);
@@ -268,6 +259,7 @@ namespace LD52
                 }
             }
         }
+        
 
         public float MaxHeals => (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
     }
