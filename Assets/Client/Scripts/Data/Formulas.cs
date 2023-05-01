@@ -26,7 +26,7 @@ namespace LD52
         }
 
 
-        public double GetHeals(Characteristics characteristics)
+        public double GetHeals(in Characteristics characteristics)
         {
             return characteristics.GetCharacteristic(HealsCharacteristic) * HealsMultipler;
         }

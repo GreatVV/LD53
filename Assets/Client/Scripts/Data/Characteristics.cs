@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Fusion;
+using UnityEngine;
 
 namespace LD52
 {
@@ -11,17 +12,12 @@ namespace LD52
 
         public int Level;
 
-        [Networked, Capacity(6)] private NetworkDictionary<int, CharacteristicBonus> Values { get; }
+        [Networked, Capacity(6)] public NetworkDictionary<int, CharacteristicBonus> Values => default;
 
-        [Networked, Capacity(6)]
-        private NetworkDictionary<int, CharacteristicBonus> Damage { get; }
+        [Networked, Capacity(6)] public NetworkDictionary<int, CharacteristicBonus> Damage => default;
+
+        [Networked, Capacity(5)] public NetworkDictionary<int, double> Defence => default;
         
-        [Networked, Capacity(5)]
-        private NetworkDictionary<int, double> Defence { get; }
-
-       
-       
-
         public void Add(CharacteristicBonuses bonuses)
         {
             foreach(var bonus in bonuses.Values)
@@ -35,9 +31,11 @@ namespace LD52
                 }
                 else
                 {
-                    Values.Set(bonus.Type, bonus);
+                    Values.Add(bonus.Type, bonus);
                 }
+                Debug.Log($"Set {bonus.Type} to {bonus}");
             }
+            Print();
         }
 
         public void Remove(CharacteristicBonuses bonuses)
@@ -54,8 +52,14 @@ namespace LD52
             }
         }
 
-        public double GetCharacteristic(CharacteristicType characteristic)
+        public double GetCharacteristic(in CharacteristicType characteristic)
         {
+            foreach (var pair in Values)
+            {
+                Debug.Log($"Value: {pair.Key}={pair.Value} ({pair.Value.Type} {pair.Value.Value} {pair.Value.Multipler}");
+            }
+            Debug.Log($"For characterstic: {(int)characteristic} ValuesCount: {Values.Count}");
+            
             if(Values.TryGet(characteristic, out var value))
             {
                 return value.Value * value.Multipler;
@@ -89,7 +93,7 @@ namespace LD52
                     Multipler = 1f,
                 };
                 
-                Damage.Set(damageType, v);
+                Damage.Add(damageType, v);
             }
         }
 
@@ -164,6 +168,15 @@ namespace LD52
             foreach(var d in defence)
             {
                 RemoveDefence(d.DamageType, d.DefencePercent);
+            }
+        }
+
+        public void Print()
+        {
+            Debug.Log($"Count: {Values.Count}");
+            foreach (var keyValuePair in Values)
+            {
+                Debug.Log($"VV: {keyValuePair.Key}=> {keyValuePair.Value.Value} {keyValuePair.Value.Multipler} {keyValuePair.Value.Type}");
             }
         }
     }

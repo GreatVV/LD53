@@ -27,13 +27,13 @@ namespace LD52
 
 
         [Networked(OnChanged = nameof(XpChanged))]
-        public Characteristics Characteristics { get; set; }
+        public ref Characteristics Characteristics => ref MakeRef<LD52.Characteristics>();
         public IWeapon Weapon;
         [Networked] public float LastAttackTime { get; set; }
         [Networked]
         public NetworkBool IsDead { get; set; }
         public bool IsStopped;
-        [Networked] public float _heals { get; set; }
+        [Networked] public float _health { get; set; }
         
         public bool ReadyForAttack{get;set;}
 
@@ -59,19 +59,26 @@ namespace LD52
             var characteristics = character.Characteristics;
             characteristics.Level = formulas.Levels.GetLevel(characteristics.Exp);
             character.Characteristics = characteristics;
+            Debug.Log("XP Changed");
         }
         
         public override void Spawned()
         {
             base.Spawned();
 
-            Characteristics.Add(StartCharacteristics);
-            var maxHeals = (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
-            _heals = maxHeals;
-            HealsChanged();
+            if (Object.HasStateAuthority)
+            {
+                Characteristics.Add(StartCharacteristics);
+                var maxHealth = (float)Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
+                Debug.Log($"Max health: {maxHealth}");
+                _health = maxHealth;
+            }
+
             RPC_EquipItem(WeaponData.Description.Id);
 
-            if (Runner.LocalPlayer.IsValid)
+            HealsChanged();
+            
+            if (Object.HasInputAuthority)
             {
                 var runtimeData = Service<RuntimeData>.Get();
                 if (runtimeData.Inventory != default)
@@ -112,7 +119,7 @@ namespace LD52
         {
             IsDead = false;
             Animator.Play(AnimationNames.Idle);
-            Heals = MaxHeals;
+            Health = MaxHeals;
             Collider.enabled = true;
             cc.enabled = true;
         }
@@ -224,20 +231,19 @@ namespace LD52
             CharacterUI.Refresh(this);
         }
 
-        public float Heals
+        public float Health
         {
-            get => _heals;
+            get => _health;
             set
             {
-                var oldValue = _heals;
-
+                var oldValue = _health;
                 var newValue = Mathf.Clamp(value, 0f, MaxHeals);
                 if(oldValue != newValue)
                 {
                     //send event
-                    _heals = newValue;
+                    _health = newValue;
                     HealsChanged();
-                    if(_heals == 0)
+                    if(_health == 0)
                     {
                         RPC_Die();
                     }
@@ -245,13 +251,7 @@ namespace LD52
             }
         }
 
-        public float MaxHeals
-        {
-            get
-            {
-                return (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
-            }
-        }
+        public float MaxHeals => (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
     }
 
     public struct UpdateInventory

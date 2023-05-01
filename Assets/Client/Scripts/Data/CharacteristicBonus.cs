@@ -5,11 +5,13 @@ namespace LD52
     [System.Serializable]
     public struct CharacteristicBonus : INetworkStruct
     {
-        [Networked]
-        public int Type { get; set; }
-        [Networked]
-        public float Value { get; set; }
-        [Networked]
-        public float Multipler { get; set; }
+        public int Type;
+        public float Value;
+        public float Multipler;
+
+        public override string ToString()
+        {
+            return $"t:{Type} v:{Value} m:{Multipler}";
+        }
     }
 }
