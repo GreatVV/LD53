@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Fusion;
-using LeopotamGroup.Globals;
 using NaughtyAttributes;
 using UnityEngine;
 
@@ -52,17 +51,20 @@ namespace LD52
         public override void Spawned()
         {
             base.Spawned();
-            var owner = Runner.FindObject(Owner).GetComponent<Character>();
-            var weaponData = this.GetData();
-            owner.Animator.runtimeAnimatorController = weaponData.Animations;
-            
-            var parent = owner.Pivots.Get(weaponData.Pivot);
-            transform.SetParent(parent);
-            transform.localPosition = Vector3.zero;
-            transform.localRotation = Quaternion.identity;
-            transform.localScale = Vector3.one;
+            if (Owner != default)
+            {
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                var weaponData = this.GetData();
+                owner.Animator.runtimeAnimatorController = weaponData.Animations;
 
-            owner.Weapon = this;
+                var parent = owner.Pivots.Get(weaponData.Pivot);
+                transform.SetParent(parent);
+                transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
+                transform.localScale = Vector3.one;
+
+                owner.Weapon = this;
+            }
         }
 
         public void StartAttack()
@@ -79,16 +81,15 @@ namespace LD52
         {
             var point = GetAttackPoint();
 
-            var hits = Runner.LagCompensation.OverlapSphere(point, Radius, Object.StateAuthority, overlapResults, options: HitOptions.IncludePhysX);
+            var hits = Runner.LagCompensation.OverlapSphere(point, Radius, Object.InputAuthority, overlapResults, options: HitOptions.IncludePhysX);
             for(var i = 0; i < hits; i++)
             {
                 var otherCharacter = overlapResults[i].Collider.GetComponent<Character>();
-                if(otherCharacter == default || otherCharacter == Owner)
+                var owner = Runner.FindObject(Owner).GetComponent<Character>();
+                if(otherCharacter == default || otherCharacter == owner)
                 {
                     continue;
                 }
-
-                var owner = Runner.FindObject(Owner).GetComponent<Character>();
                 DamageHelper.SendDamage(owner, otherCharacter, this.GetData());
                 return;
             }
@@ -117,35 +118,6 @@ namespace LD52
         {
             var owner = Runner.FindObject(Owner).GetComponent<Character>();
             return owner.transform.position + owner.transform.forward * Distance;
-        }
-    }
-
-    public static class DamageHelper
-    {
-        public static void SendDamage(Character attacker, Character target, WeaponData weaponData)
-        {
-            if(target == attacker) return;
-
-            Debug.Log($" {target.name} attacked");
-
-            if (target.Characteristics.Equals(default)) //todo check
-            {
-                return;
-            }
-            var staticData = Service<StaticData>.Get();
-            var damage = (float) staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
-            Debug.Log($"Damage {damage} from {attacker.name} to {target.name}");
-            target.Health -= damage;
-        }
-
-        public static void SendDamage(Character attacker, Collider targetCollider, WeaponData weaponData)
-        {
-            if(!targetCollider || !attacker || targetCollider.gameObject == attacker.gameObject) return;
-
-            if(targetCollider.TryGetComponent<Character>(out var target))
-            {
-                SendDamage(attacker, target, weaponData);
-            }
         }
     }
 }

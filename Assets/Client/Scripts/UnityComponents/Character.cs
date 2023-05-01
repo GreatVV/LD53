@@ -162,7 +162,7 @@ namespace LD52
             {
                 IsDead = true;
                 Debug.Log($"{name} is dying");
-                if(DropList != default)
+                if(DropList)
                 {
                     SpawnDrop();
                 }
@@ -261,7 +261,7 @@ namespace LD52
                     //send event
                     _health = newValue;
                     HealsChanged();
-                    if(_health == 0)
+                    if(_health <= 0)
                     {
                         RPC_Die();
                     }

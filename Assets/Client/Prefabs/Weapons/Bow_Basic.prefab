@@ -131,20 +131,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   ItemDescription:
-    Id: 
-    LocalizedName: 
-    Icon: {fileID: 0}
-    Size: {x: 0, y: 0}
-    Prefab: {fileID: 0}
-    Mass: 0
+    Id: Bow
+    LocalizedName: Bow
+    Icon: {fileID: 21300000, guid: f049b8f6e6c70664abce7e9de8fc5a5c, type: 3}
+    Size: {x: 2, y: 3}
+    Prefab: {fileID: 4992889230576277805}
+    Mass: 1
+  _InAttack:
+    _value: 0
   Range: 1
   Projectile: {fileID: 1560266351253019, guid: 1c467566214c98940b816dfcbe9d980d, type: 3}
   ProjectileSpawnPoint: {fileID: 1554576043977547753}
+  _Owner:
+    Raw: 0
+  _DataID: 
   Distance: 0
   Radius: 0
   AttackDelay: 0.3
-  _InAttack:
-    _value: 0
 --- !u!114 &7485831036391779799
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -239,7 +239,8 @@ MonoBehaviour:
     _value: 0
   IsStopped: 0
   __health: 0
-  WeaponData: {fileID: 11400000, guid: ef174654f52988d66809a5e1f424384c, type: 2}
+  _ChosenWeapon: 
+  WeaponData: {fileID: 11400000, guid: 59bb57633774202b09075026c6af6ab9, type: 2}
   DropList: {fileID: 11400000, guid: 0e3debfdaea2bbc1fb324222ecb46e59, type: 2}
   StartCharacteristics: {fileID: 11400000, guid: 81bf575a2790e8cb1a7edfc3d5cbd40c,
     type: 2}

@@ -17,13 +17,13 @@ namespace LD52
                 Destroy(View);
             }
 
-            View = Instantiate(itemData.Description.Prefab).gameObject;
+            View = Runner.Spawn(itemData.Description.Prefab).gameObject;
             View.transform.position = transform.position;
             Data = itemData;
             View.transform.position = Container.position;
             View.transform.parent = Container;
         }
-/*
+        
         private void OnTriggerEnter(Collider other)
         {
             if(other.TryGetComponent<Character>(out var character))
@@ -47,6 +47,6 @@ namespace LD52
                 });
                 Runner.Despawn(Object);
             }
-        }*/
+        }
     }
 }
