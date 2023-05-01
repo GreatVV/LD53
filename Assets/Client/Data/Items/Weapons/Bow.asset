@@ -16,10 +16,11 @@ MonoBehaviour:
   Description:
     Id: Bow1
     LocalizedName: Bow
-    Icon: {fileID: 0}
+    Icon: {fileID: 21300000, guid: f049b8f6e6c70664abce7e9de8fc5a5c, type: 3}
     Size: {x: 2, y: 2}
     Prefab: {fileID: 4992889230576277805, guid: 7b3f93e03ab20578cab8f268728c5dcb,
       type: 3}
+    Mass: 0
   Coldown: 1
   Damage:
   - DamageType: {fileID: 11400000, guid: ff980db0c14608dbc8cfec69fb54aa0c, type: 2}

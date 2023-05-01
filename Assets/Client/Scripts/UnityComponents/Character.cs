@@ -88,6 +88,8 @@ namespace LD52
             IsDead = false;
             Animator.Play(AnimationNames.Idle);
             Heals = MaxHeals;
+            Collider.enabled = true;
+            cc.enabled = true;
         }
         
         [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
@@ -101,6 +103,7 @@ namespace LD52
             Debug.Log($"{name} is dying");
             Animator.SetTrigger(AnimationNames.Death);
             Collider.enabled = false;
+            cc.enabled = false;
             if(DropList != default)
             {
                 SpawnDrop();
