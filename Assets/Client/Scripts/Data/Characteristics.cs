@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using Fusion;
 
 namespace LD52
 {
+    [Serializable]
     public struct Characteristics : INetworkStruct
     {
         public int Exp;

@@ -258,6 +258,7 @@ namespace LD52
         public NetworkLinkedList<ItemDesc> value;
     }
 
+    [Serializable]
     public struct ItemDesc : INetworkStruct
     {
         [Networked]
