@@ -4,6 +4,6 @@ namespace LD52
     public struct DamageDescription
     {
         public DamageType DamageType;
-        public double Value;
+        public float Value;
     }
 }

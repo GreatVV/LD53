@@ -60,7 +60,7 @@ namespace LD52
             return 0;
         }
 
-        public double GetDamage(DamageType damageType)
+        public float GetDamage(DamageType damageType)
         {
             if(Damage.TryGet(damageType, out var characteristic))
             {
@@ -70,7 +70,7 @@ namespace LD52
             return 0;
         }
 
-        public void AddDamage(DamageType damageType, double value, double multipler)
+        public void AddDamage(DamageType damageType, float value, float multipler)
         {
             if(Damage.TryGet(damageType, out var v))
             {
@@ -83,7 +83,7 @@ namespace LD52
                 v = new CharacteristicBonus()
                 {
                     Value = value,
-                    Multipler = 1d,
+                    Multipler = 1f,
                 };
                 
                 Damage.Set(damageType, v);
@@ -95,11 +95,11 @@ namespace LD52
         {
             foreach(var d in damage)
             {
-                AddDamage(d.DamageType, d.Value, 0d);
+                AddDamage(d.DamageType, d.Value, 0f);
             }
         }
 
-        public void RemoveDamage(DamageType damageType, double value, double multipler)
+        public void RemoveDamage(DamageType damageType, float value, float multipler)
         {
             if(Damage.TryGet(damageType, out var v))
             {
@@ -113,7 +113,7 @@ namespace LD52
         {
             foreach(var d in damage)
             {
-                RemoveDamage(d.DamageType, d.Value, 0d);
+                RemoveDamage(d.DamageType, d.Value, 0f);
             }
         }
 

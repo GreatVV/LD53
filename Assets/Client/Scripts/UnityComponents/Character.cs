@@ -16,7 +16,6 @@ namespace LD52
         public Animator Animator;
         public KCC cc;
         public CharacterUI CharacterUI;
-	    readonly FixedInput LocalInput = new FixedInput();
 	    public bool TransformLocal = false;
         public float Speed;
 	    public float lookTurnRate = 1.5f;
@@ -48,7 +47,7 @@ namespace LD52
             HealsChanged();
             RPC_EquipItem(WeaponData.Description.Id);
 
-            if (Runner.LocalPlayer)
+            if (Runner.LocalPlayer.IsValid)
             {
                 var runtimeData = Service<RuntimeData>.Get();
                 if (runtimeData.Inventory != default)
@@ -174,107 +173,7 @@ namespace LD52
             Weapon.EndAttack();
         }
         
-        public override void FixedUpdateNetwork()
-	    {
-            if (Runner.Config.PhysicsEngine == NetworkProjectConfig.PhysicsEngines.None)
-            {
-                return;
-            }
-
-            bool isAttack = false;
-
-            Vector3 direction = default;
-            if (!IsDead && GetInput(out NetworkInputPrototype input))
-            {
-                // BUTTON_WALK is representing left mouse button
-                if (input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
-                {
-                    direction = new Vector3(
-                        Mathf.Cos((float)input.Yaw * Mathf.Deg2Rad),
-                        0,
-                        Mathf.Sin((float)input.Yaw * Mathf.Deg2Rad)
-                    );
-                    if(LastAttackTime + Weapon.Data.Coldown < Runner.SimulationTime)
-                    {
-                        RPC_Attack();
-                    }
-
-                    isAttack = true;
-
-                }
-                else
-                {
-                    if (input.IsDown(NetworkInputPrototype.BUTTON_FORWARD))
-                    {
-                        direction += TransformLocal ? transform.forward : Vector3.forward;
-                    }
-
-                    if (input.IsDown(NetworkInputPrototype.BUTTON_BACKWARD))
-                    {
-                        direction -= TransformLocal ? transform.forward : Vector3.forward;
-                    }
-
-                    if (input.IsDown(NetworkInputPrototype.BUTTON_LEFT))
-                    {
-                        direction -= TransformLocal ? transform.right : Vector3.right;
-                    }
-
-                    if (input.IsDown(NetworkInputPrototype.BUTTON_RIGHT))
-                    {
-                        direction += TransformLocal ? transform.right : Vector3.right;
-                    }
-
-                   
-
-                    direction = direction.normalized;
-                }
-
-                if (Object.HasInputAuthority && Runner.IsResimulation == false)
-                {
-                    if (LocalInput.GetDown(KeyCode.E))
-                    {
-                     //   TryKill();
-                     //   TryUse(true);
-                     //   TryUse(false);
-                    }
-                }
-
-                if(!IsDead && ReadyForAttack)
-                {
-                    Weapon.RPC_StartAttack();
-                    ReadyForAttack = false;
-                }
-            }
-
-            
-            if(isAttack || IsStopped)
-            {
-                cc.SetInputDirection(Vector3.zero);
-                cc.SetKinematicVelocity(Vector3.zero);
-                Animator.SetFloat(AnimationNames.DirX, 0);
-                Animator.SetFloat(AnimationNames.DirY, 0);
-                Animator.SetFloat(AnimationNames.Speed, 0);
-            }
-            else
-            {
-                cc.SetInputDirection(direction);
-                cc.SetKinematicVelocity(direction * Speed);
-                Animator.SetFloat(AnimationNames.DirX, direction.x);
-                Animator.SetFloat(AnimationNames.DirY, direction.y);
-                Animator.SetFloat(AnimationNames.Speed, Speed * direction.sqrMagnitude);
-            }
-            
-            
-            if (direction != Vector3.zero)
-            {
-                Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
-                cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, lookTurnRate * 360 * Runner.DeltaTime));
-            }
-            
-
-            if (Runner.IsResimulation == false)
-                LocalInput.Clear();
-        }
+        
 
         private void HealsChanged()
         {

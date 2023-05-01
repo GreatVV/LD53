@@ -15,7 +15,7 @@ namespace LD52
         public override void Spawned()
         {
             base.Spawned();
-            if (Runner.LocalPlayer)
+            if (Runner.LocalPlayer.IsValid)
             {
                 Service<RuntimeData>.Get().Quester = this;
             }
@@ -23,7 +23,7 @@ namespace LD52
 
         private void OnTriggerEnter(Collider other)
         {
-            if (Runner.LocalPlayer)
+            if (Runner.LocalPlayer.IsValid)
             {
                 var questGiver = other.GetComponentInChildren<QuestGiver>();
                 if (questGiver)
@@ -66,7 +66,7 @@ namespace LD52
 
         public void OnTriggerExit(Collider other)
         {
-            if (Runner.LocalPlayer)
+            if (Runner.LocalPlayer.IsValid)
             {
                 var questManager = other.GetComponentInChildren<QuestManager>();
                 if (questManager)

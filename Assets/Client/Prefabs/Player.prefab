@@ -74,6 +74,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: -2280947848891538274}
+    - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4555550639605993880}
   m_SourcePrefab: {fileID: 100100000, guid: 4f46098734d87e24490aef9267915ad2, type: 3}
 --- !u!4 &3429104956135355064 stripped
 Transform:
@@ -198,6 +202,7 @@ MonoBehaviour:
   - {fileID: 6990468112116280324}
   - {fileID: 7928675630787931478}
   - {fileID: -2280947848891538274}
+  - {fileID: 4555550639605993880}
   SimulationBehaviours: []
 --- !u!114 &7928675630787931478
 MonoBehaviour:
@@ -223,7 +228,8 @@ MonoBehaviour:
   _LastAttackTime: 0
   _IsDead:
     _value: 0
-  _heals: 0
+  IsStopped: 0
+  __heals: 0
   WeaponData: {fileID: 11400000, guid: 74a17e467fd7f0ed08fb54c57fd5ffc6, type: 2}
   DropList: {fileID: 0}
   StartCharacteristics: {fileID: 11400000, guid: 5db7defee8317ada9aecd9d5a9bbabba,
@@ -282,6 +288,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interpolationDataSource: 0
   _TakenQuests: []
+--- !u!114 &4555550639605993880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429104957269450786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65355962cc604b0c6a25a80d26c2832f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Character: {fileID: 7928675630787931478}
 --- !u!4 &3429104957734578479 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4957605394169409697, guid: 4f46098734d87e24490aef9267915ad2,

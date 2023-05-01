@@ -70,6 +70,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 2677030700685034972}
+    - targetCorrespondingSourceObject: {fileID: 4957605393579145644, guid: 4f46098734d87e24490aef9267915ad2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4124452267746891155}
   m_SourcePrefab: {fileID: 100100000, guid: 4f46098734d87e24490aef9267915ad2, type: 3}
 --- !u!4 &3429104956135355064 stripped
 Transform:
@@ -193,6 +197,7 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 6990468112116280324}
   - {fileID: 7928675630787931478}
+  - {fileID: 4124452267746891155}
   SimulationBehaviours: []
 --- !u!114 &7928675630787931478
 MonoBehaviour:
@@ -218,7 +223,8 @@ MonoBehaviour:
   _LastAttackTime: 0
   _IsDead:
     _value: 0
-  _heals: 0
+  IsStopped: 0
+  __heals: 0
   WeaponData: {fileID: 11400000, guid: ef174654f52988d66809a5e1f424384c, type: 2}
   DropList: {fileID: 11400000, guid: 0e3debfdaea2bbc1fb324222ecb46e59, type: 2}
   StartCharacteristics: {fileID: 11400000, guid: 81bf575a2790e8cb1a7edfc3d5cbd40c,
@@ -263,6 +269,24 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &4124452267746891155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3429104957269450786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95c70b75108be0a8c89a26cb447908d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interpolationDataSource: 0
+  Character: {fileID: 7928675630787931478}
+  Target: {fileID: 0}
+  LookEnemyRadius: 3.5
+  LookEnemyRate: 0
+  AttackDistance: 0
 --- !u!4 &3429104957734578479 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4957605394169409697, guid: 4f46098734d87e24490aef9267915ad2,
@@ -277,6 +301,16 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3429104957269450784}
     m_Modifications:
+    - target: {fileID: 806620398361060653, guid: dc53cdd7a2c0b9ef6965797e855094df,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 806620398361060653, guid: dc53cdd7a2c0b9ef6965797e855094df,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3026838558268114618, guid: dc53cdd7a2c0b9ef6965797e855094df,
         type: 3}
       propertyPath: m_AnchorMax.x

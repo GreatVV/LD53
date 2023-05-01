@@ -8,8 +8,8 @@ namespace LD52
         [Networked]
         public int Type { get; set; }
         [Networked]
-        public double Value { get; set; }
+        public float Value { get; set; }
         [Networked]
-        public double Multipler { get; set; }
+        public float Multipler { get; set; }
     }
 }
