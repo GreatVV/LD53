@@ -93,7 +93,7 @@ namespace LD52
                     }
                 }
 
-                if (inventoryIcon == default)
+                if (inventoryIcon == default || !inventoryIcon.IconView)
                 {
                     inventoryIcon = new InventoryIcon()
                     {
@@ -113,6 +113,8 @@ namespace LD52
                 sizeDelta.y *= itemState.ItemDescription.Size.y;
                 var iconViewTransform = inventoryIcon.IconView.transform as RectTransform;
                 iconViewTransform.anchoredPosition = cellViewTransform.anchoredPosition;
+                inventoryIcon.IconView.TargetCellView = cellViewTransform;
+                Debug.Log($"Set to {cellViewTransform.anchoredPosition} {itemState.Position}", iconViewTransform.gameObject);
                 iconViewTransform.sizeDelta = sizeDelta;
             }
         }

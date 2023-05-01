@@ -7,7 +7,7 @@ namespace LD52
 {
     public class Quester : NetworkBehaviour
     {
-        [Networked]
+        [Networked, Capacity(4)]
         public NetworkLinkedList<Quest> TakenQuests { get; }
 
         private bool CanOpenQuestBoard = true;
@@ -35,6 +35,7 @@ namespace LD52
                             if (takenQuest.From == questGiver)
                             {
                                 Debug.Log("Try to take item from quest giver");
+                                QuestManager.Instance.RPC_TakeItemForQuest(this, takenQuest);
                             }
                         }
                     }
@@ -50,6 +51,8 @@ namespace LD52
                             if (takenQuest.To == questTarget)
                             {
                                 Debug.Log("Try give item to quest target");
+                                RPC_FinishQuest(this, takenQuest);
+                                Service<RuntimeData>.Get().Diary.AddEntry(new FinishQuestEntry(takenQuest));
                             }
                         }
                     }
@@ -61,6 +64,36 @@ namespace LD52
                     CanOpenQuestBoard = false;
                     UI.Instance.QuestBoard.Show(questManager, this);
                 }
+            }
+        }
+
+        [Rpc]
+        private void RPC_FinishQuest(Quester quester, Quest takenQuest)
+        {
+            if (Runner.IsServer)
+            {
+                var character = quester.GetComponent<Character>();
+                for (var index = character.Items.Count - 1; index >= 0; index--)
+                {
+                    var itemDesc = character.Items[index];
+                    if (itemDesc.ItemId == takenQuest.ItemID)
+                    {
+                        character.Items.Remove(itemDesc);
+                    }
+                }
+
+                for (var index = quester.TakenQuests.Count - 1; index >= 0; index--)
+                {
+                    var questerTakenQuest = quester.TakenQuests[index];
+                    if (questerTakenQuest.Id == takenQuest.Id)
+                    {
+                        quester.TakenQuests.Remove(questerTakenQuest);
+                    }
+                }
+
+                var characteristics = character.Characteristics;
+                characteristics.Exp += takenQuest.XPReward;
+                character.Characteristics = characteristics;
             }
         }
 

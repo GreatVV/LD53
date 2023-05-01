@@ -18,6 +18,7 @@ namespace LD52
         private NetworkDictionary<int, double> Defence { get; }
 
        
+       
 
         public void Add(CharacteristicBonuses bonuses)
         {

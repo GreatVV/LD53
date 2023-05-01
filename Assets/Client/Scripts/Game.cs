@@ -25,6 +25,7 @@ namespace LD52
                 .Add(new InitializeSystem())
                 .Add(new ServerLogicSystem())
                 .Add(new OpenUISystem())
+                .Add(new SyncInventorySystem())
                 .Add(new InventorySystem())
                 .Inject(SceneData)
                 .Inject(StaticData)
