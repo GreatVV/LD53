@@ -31,13 +31,7 @@ namespace LD52
 
         private void LookAtCamera()
         {
-            var visible = Camera.rect.Contains(Camera.WorldToViewportPoint(transform.parent.position));
-            transform.gameObject.SetActive(visible);
-            if(visible)
-            {
-                transform.LookAt(Camera.transform);
-            }
-            
+            transform.LookAt(Camera.transform);
         }
     }
 }

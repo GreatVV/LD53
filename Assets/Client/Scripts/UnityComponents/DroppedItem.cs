@@ -23,7 +23,7 @@ namespace LD52
             View.transform.position = Container.position;
             View.transform.parent = Container;
         }
-
+/*
         private void OnTriggerEnter(Collider other)
         {
             if(other.TryGetComponent<Character>(out var character))
@@ -47,6 +47,6 @@ namespace LD52
                 });
                 Runner.Despawn(Object);
             }
-        }
+        }*/
     }
 }

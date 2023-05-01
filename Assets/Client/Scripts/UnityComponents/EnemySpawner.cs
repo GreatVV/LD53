@@ -9,10 +9,9 @@ namespace LD52
         public float Coldown = 10f;
         public Character Prefab;
         public float Radius;
-        public int EnemyLevel;
         [Networked] public NetworkBool EnemySpawned {get; set;}
         [Networked] public NetworkBool EnemyDead {get; set;}
-        private float _respawnTimer = 0;
+        private TickTimer _respawnTimer;
         private Character _spawnerCharacter;
 
         public override void Spawned()
@@ -42,14 +41,10 @@ namespace LD52
                 {
                     SpawnEnemy();
                 }
-                else if(EnemyDead)
+                else if(_spawnerCharacter.IsDead && _respawnTimer.Expired(Runner))
                 {
-                    _respawnTimer -= Runner.DeltaTime;
-
-                    if(_respawnTimer < 0)
-                    {
-                        Respawn();
-                    }
+                    _spawnerCharacter.RPC_Respawn();
+                    _spawnerCharacter.cc.SetPosition(GetSpawnPoint());
                 }
             }
         }
@@ -66,17 +61,8 @@ namespace LD52
             var runtimeData = Service<RuntimeData>.Get();
             if(runtimeData.Runner.IsServer)
             {
-                character.RPC_Respawn();
-                character.cc.SetPosition(GetSpawnPoint());
-    //            EnemyDead = true;
-                _respawnTimer = Coldown;
+                _respawnTimer = TickTimer.CreateFromSeconds(Runner, Coldown);
             }
-        }
-
-        private void Respawn()
-        {
-            _spawnerCharacter.RPC_Respawn();
-            EnemyDead = false;
         }
 
         private void OnDrawGizmosSelected()

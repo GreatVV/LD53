@@ -10,5 +10,6 @@ namespace LD52
         public static readonly int DirY = Animator.StringToHash("DirY");
         public static readonly int Speed = Animator.StringToHash("Speed");
         public static readonly int Idle = Animator.StringToHash("Idle");
+        public static readonly int Walk = Animator.StringToHash("Walk");
     }
 }
