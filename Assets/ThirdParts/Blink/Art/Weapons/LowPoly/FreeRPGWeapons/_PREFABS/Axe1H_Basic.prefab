@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 811062370745517174}
   - component: {fileID: 4390626425023368147}
   - component: {fileID: 1948462360350359321}
-  - component: {fileID: 8227740632818476007}
   - component: {fileID: 3589558904868518448}
   - component: {fileID: -1633636873187286676}
   m_Layer: 0
@@ -86,27 +85,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8227740632818476007
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2999748106215116}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.37392724, y: 0.32732755, z: 0.06049145}
-  m_Center: {x: -0.003198415, y: 0.39476225, z: -0.000762837}
 --- !u!114 &3589558904868518448
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,10 +104,15 @@ MonoBehaviour:
     Icon: {fileID: 0}
     Size: {x: 0, y: 0}
     Prefab: {fileID: 0}
-  Collider: {fileID: 8227740632818476007}
+    Mass: 0
   Range: 0
   Projectile: {fileID: 0}
   ProjectileSpawnPoint: {fileID: 0}
+  Distance: 1
+  Radius: 1
+  AttackDelay: 0.2
+  _InAttack:
+    _value: 0
 --- !u!114 &-1633636873187286676
 MonoBehaviour:
   m_ObjectHideFlags: 0

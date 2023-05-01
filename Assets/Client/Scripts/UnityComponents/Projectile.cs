@@ -11,7 +11,7 @@ namespace LD52
         public Character Owner;
         public float Radius;
         public Transform CheckForImpactPoint;
-        public WeaponData WeaponData {get;set;}
+        public Weapon Weapon {get;set;}
         public NetworkObject networkObject;
 
         TickTimer lifeEndTimer;
@@ -45,7 +45,7 @@ namespace LD52
                             continue;
                         }
 
-                        DamageHelper.SendDamage(Owner, otherCharacter, WeaponData);
+                        DamageHelper.SendDamage(Owner, otherCharacter, Weapon.Data);
                         Runner.Despawn(networkObject);
                         return;
                         
@@ -56,7 +56,7 @@ namespace LD52
 
         private void OnTriggerEnter(Collider other)
         {
-            DamageHelper.SendDamage(Owner, other, WeaponData);
+            DamageHelper.SendDamage(Owner, other, Weapon.Data);
         }
     }
 }

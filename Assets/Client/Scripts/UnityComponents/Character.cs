@@ -92,17 +92,18 @@ namespace LD52
             {
                 if(!IsDead && ReadyForAttack)
                 {
-                    Weapon.RPC_StartAttack();
-                    ReadyForAttack = false;
+                //    Weapon.RPC_StartAttack();
+                //    ReadyForAttack = false;
                 }
             }
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_Attack()
         {
             if(IsDead) return;
             LastAttackTime = Runner.SimulationTime;
+            Weapon.StartAttack();
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
@@ -205,17 +206,17 @@ namespace LD52
             Characteristics.RemoveDefence(item.Defence);
         }
         
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    //    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         public void RPC_StartAttack()
         {
-            ReadyForAttack = true;
+//            ReadyForAttack = true;
 //            Weapon.RPC_StartAttack();
         }
 
-        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    //    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         public void RPC_EndAttack()
         {
-            Weapon.EndAttack();
+        //    Weapon.EndAttack();
         }
 
         private void HealsChanged()
