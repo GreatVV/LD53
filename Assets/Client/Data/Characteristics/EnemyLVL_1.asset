@@ -16,24 +16,24 @@ MonoBehaviour:
   - _Type:
       Data: 00000000
     _Value:
-      Data: 0000000000000040
+      Data: e8030000
     _Multipler:
-      Data: 0000000000000040
+      Data: e8030000
   - _Type:
       Data: 01000000
     _Value:
-      Data: 0000000000000040
+      Data: e8030000
     _Multipler:
-      Data: 0000000000000040
+      Data: e8030000
   - _Type:
       Data: 02000000
     _Value:
-      Data: 0000000000000040
+      Data: e8030000
     _Multipler:
-      Data: 0000000000000040
+      Data: e8030000
   - _Type:
       Data: 03000000
     _Value:
-      Data: 0000000000000040
+      Data: e8030000
     _Multipler:
-      Data: 0000000000000040
+      Data: e8030000

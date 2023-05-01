@@ -15,10 +15,20 @@ namespace LD52
                 return;
             }
 
+            if(Character.IsDead)
+            {
+                if (Runner.IsResimulation == false)
+                {
+                    LocalInput.Clear();
+                }
+
+                return;
+            }
+
             bool isAttack = false;
 
             Vector3 direction = default;
-            if (!Character.IsDead && GetInput(out NetworkInputPrototype input))
+            if (GetInput(out NetworkInputPrototype input))
             {
                 // BUTTON_WALK is representing left mouse button
                 if (input.IsDown(NetworkInputPrototype.BUTTON_FIRE))
@@ -30,6 +40,9 @@ namespace LD52
                     );
                     if(Character.LastAttackTime + Character.Weapon.Data.Coldown < Runner.SimulationTime)
                     {
+                        Quaternion targetQ = Quaternion.AngleAxis(Mathf.Atan2(direction.z, direction.x) * Mathf.Rad2Deg - 90, Vector3.down);
+                        Character.cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, 360f));//Character.lookTurnRate * 360 * Runner.DeltaTime));
+            
                         Character.RPC_Attack();
                     }
 
@@ -58,25 +71,7 @@ namespace LD52
                         direction += Character.TransformLocal ? transform.right : Vector3.right;
                     }
 
-                   
-
                     direction = direction.normalized;
-                }
-
-                if (Object.HasInputAuthority && Runner.IsResimulation == false)
-                {
-                    if (LocalInput.GetDown(KeyCode.E))
-                    {
-                     //   TryKill();
-                     //   TryUse(true);
-                     //   TryUse(false);
-                    }
-                }
-
-                if(!Character.IsDead && Character.ReadyForAttack)
-                {
-                    Character.Weapon.RPC_StartAttack();
-                    Character.ReadyForAttack = false;
                 }
             }
 
@@ -105,9 +100,6 @@ namespace LD52
                 Character.cc.SetLookRotation(Quaternion.RotateTowards(transform.rotation, targetQ, Character.lookTurnRate * 360 * Runner.DeltaTime));
             }
             
-
-            if (Runner.IsResimulation == false)
-                LocalInput.Clear();
         }
     }
 }

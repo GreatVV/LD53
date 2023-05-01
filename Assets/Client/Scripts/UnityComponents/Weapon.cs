@@ -22,8 +22,18 @@ namespace LD52
         [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
         public void RPC_StartAttack()
         {
-            Owner.IsStopped = true;
-            Owner.ReadyForAttack = true;
+            if(Range)
+            {
+                var projectile = Runner.Spawn(Projectile, ProjectileSpawnPoint.position, Owner.transform.rotation);
+                projectile.Owner = Owner;
+                projectile.WeaponData = Data;
+                projectile.Fire();
+
+            }
+            else
+            {
+                Collider.enabled = true;
+            }
         }
 
         public void EndAttack()
@@ -40,22 +50,29 @@ namespace LD52
 
     public static class DamageHelper
     {
+        public static void SendDamage(Character attacker, Character target, WeaponData weaponData)
+        {
+            if(target == attacker) return;
+
+            Debug.Log($" {target.name} attacked");
+
+            if (target.Characteristics.Equals(default)) //todo check
+            {
+                return;
+            }
+            var staticData = Service<StaticData>.Get();
+            var damage = (float) staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
+            Debug.Log($"Damage {damage} from {attacker.name} to {target.name}");
+            target.Heals -= damage;
+        }
+
         public static void SendDamage(Character attacker, Collider targetCollider, WeaponData weaponData)
         {
             if(targetCollider.gameObject == attacker.gameObject) return;
 
-            Debug.Log($" {targetCollider.name} attacked");
-
             if(targetCollider.TryGetComponent<Character>(out var target))
             {
-                if (target.Characteristics.Equals(default)) //todo check
-                {
-                    return;
-                }
-                var staticData = Service<StaticData>.Get();
-                var damage = (float) staticData.Formulas.GetDamage(attacker.Characteristics, target.Characteristics, weaponData);
-                Debug.Log($"Damage {damage} from {attacker.name} to {target.name}");
-                target.Heals -= damage;
+                SendDamage(attacker, target, weaponData);
             }
         }
     }

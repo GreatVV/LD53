@@ -41,7 +41,7 @@ namespace LD52
             {
                 var dmg = damager.GetDamage(weaponDamge.DamageType);
                 var defence = target.GetDefence(weaponDamge.DamageType);
-                result += dmg * (100 + mainCharacteristic*10) / 100 * (100 - defence);
+                result += dmg * (mainCharacteristic*10) / 100 * (100 - defence);
             }
 
             return System.Math.Max(result, MinDamage);

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -8,22 +9,48 @@ namespace LD52
         public float Speed;
         public float LifeTime;
         public Character Owner;
-        private float _destroyIn;
+        public float Radius;
+        public Transform CheckForImpactPoint;
         public WeaponData WeaponData {get;set;}
+        public NetworkObject networkObject;
 
-        private void Start()
+        TickTimer lifeEndTimer;
+        private List<LagCompensatedHit> overlapResults = new List<LagCompensatedHit>();
+
+        public void Fire()
         {
-            _destroyIn = LifeTime;
+            lifeEndTimer = TickTimer.CreateFromSeconds(Runner, LifeTime);
         }
 
-        private void Update()
+        public override void FixedUpdateNetwork()
         {
-            transform.position += transform.forward * (Speed * Time.deltaTime);
-            _destroyIn -= Time.deltaTime;
+            transform.position += transform.forward * (Speed *  Runner.DeltaTime);
 
-            if(_destroyIn < 0)
+            if(Object.HasStateAuthority)
             {
-                Destroy(gameObject);
+                if(lifeEndTimer.Expired(Runner))
+                {
+                    Runner.Despawn(networkObject);
+                    return;
+                }
+
+                var hits = Runner.LagCompensation.OverlapSphere(CheckForImpactPoint.position, Radius, Object.StateAuthority, overlapResults, options: HitOptions.IncludePhysX);
+                for(var i = 0; i < hits; i++)
+                {
+                    if(overlapResults[i].Hitbox != default)
+                    {
+                        var otherCharacter = overlapResults[i].Hitbox.Root.GetBehaviour<Character>();
+                        if(otherCharacter == default || otherCharacter == Owner)
+                        {
+                            continue;
+                        }
+
+                        DamageHelper.SendDamage(Owner, otherCharacter, WeaponData);
+                        Runner.Despawn(networkObject);
+                        return;
+                        
+                    }
+                }
             }
         }
 

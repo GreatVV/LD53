@@ -61,7 +61,20 @@ namespace LD52
             }
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+            if(Runner.IsServer)
+            {
+                if(!IsDead && ReadyForAttack)
+                {
+                    Weapon.RPC_StartAttack();
+                    ReadyForAttack = false;
+                }
+            }
+        }
+
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         public void RPC_Attack()
         {
             if(IsDead) return;
@@ -69,7 +82,7 @@ namespace LD52
             Animator.SetTrigger(AnimationNames.Attack);
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         public void RPC_Respawn()
         {
             IsDead = false;
@@ -77,7 +90,7 @@ namespace LD52
             Heals = MaxHeals;
         }
         
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         public void RPC_Die()
         {
             if (IsDead)
@@ -111,7 +124,7 @@ namespace LD52
             Characteristics.Level = formulas.Levels.GetLevel(Characteristics.Exp);
         }
 
-        [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
         private void RPC_EquipItem(string itemID)
         {
             var staticData = Service<StaticData>.Get();
@@ -132,6 +145,7 @@ namespace LD52
 
             var parent = Pivots.Get(item.Pivot);
             var view =  Runner.Spawn(item.Description.Prefab, inputAuthority: Runner.LocalPlayer);
+            view.transform.SetParent(parent);
             view.transform.localPosition = Vector3.zero;
             view.transform.localRotation = Quaternion.identity;
             view.transform.localScale = Vector3.one;
@@ -163,17 +177,18 @@ namespace LD52
             Characteristics.RemoveDefence(item.Defence);
         }
         
-        public void StartAttack()
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        public void RPC_StartAttack()
         {
-            Weapon.RPC_StartAttack();
+            ReadyForAttack = true;
+//            Weapon.RPC_StartAttack();
         }
 
-        public void EndAttack()
+        [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+        public void RPC_EndAttack()
         {
             Weapon.EndAttack();
         }
-        
-        
 
         private void HealsChanged()
         {

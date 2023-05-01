@@ -64,14 +64,14 @@ ModelImporter:
       curves: []
       events:
       - time: 0.30389428
-        functionName: StartAttack
+        functionName: RPC_StartAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.6776946
-        functionName: EndAttack
+        functionName: RPC_EndAttack
         data: 
         objectReferenceParameter: {instanceID: 0}
         floatParameter: 0
