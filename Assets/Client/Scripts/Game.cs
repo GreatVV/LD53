@@ -27,6 +27,7 @@ namespace LD52
                 .Add(new OpenUISystem())
                 .Add(new SyncInventorySystem())
                 .Add(new InventorySystem())
+                .Add(new ShowArrowToTargetSystem())
                 .Inject(SceneData)
                 .Inject(StaticData)
                 .Inject(RuntimeData)

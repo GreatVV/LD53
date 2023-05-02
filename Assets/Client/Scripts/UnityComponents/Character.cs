@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.KCC;
+using Helpers.Collections;
 using Leopotam.Ecs;
 using LeopotamGroup.Globals;
 using UnityEngine;
@@ -24,6 +25,9 @@ namespace LD52
         public Pivots Pivots;
         [Space] [Header("Runtime data")]//How to sync it?
         private RuntimeAnimatorController RuntimeAnimatorController;
+
+        public DistanceArrow Arrow;
+        
 
 
         [Networked(OnChanged = nameof(XpChanged))]
@@ -56,8 +60,24 @@ namespace LD52
         [Space] [Header("Start data")]
         public WeaponData WeaponData;
         public ItemsList DropList;
+        
+        string[] darkFantasyCharacterNames = {
+            "Thorne Blackwood",
+            "Draven Nightshade",
+            "Elira Ravenshadow",
+            "Morgrim Soulreaver",
+            "Valyra Darkthorn",
+            "Riven Grimward",
+            "Kaelith Stormrider",
+            "Sylas Blackfrost",
+            "Seraphine Mourningveil",
+            "Eamon Bloodrune"
+        };
+
 
         public CharacteristicBonuses StartCharacteristics;
+        [Networked, Capacity(30)]
+        public string LocalizedName { get; set; }
 
         public static void ItemsChanged( Changed<Character> changed)
         {
@@ -75,6 +95,7 @@ namespace LD52
             var characteristics = character.Characteristics;
             characteristics.Level = formulas.Levels.GetLevel(characteristics.Exp);
             character.Characteristics = characteristics;
+            character.CharacterUI.Refresh(character);
             Debug.Log("XP Changed");
         }
         
@@ -84,6 +105,7 @@ namespace LD52
 
             if (Object.HasStateAuthority)
             {
+                LocalizedName = darkFantasyCharacterNames.RandomElement();
                 Characteristics.Add(StartCharacteristics);
                 var maxHealth = (float)Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
                 Debug.Log($"Max health: {maxHealth}");
@@ -106,6 +128,18 @@ namespace LD52
                         Width = 10,
                         Height = 8
                     };
+                }
+                
+                if (Arrow)
+                {
+                    Arrow.gameObject.SetActive(true);
+                }
+            }
+            else
+            {
+                if (Arrow)
+                {
+                    Arrow.gameObject.SetActive(false);
                 }
             }
         }
@@ -261,19 +295,4 @@ namespace LD52
 
         public float MaxHeals => (float) Service<StaticData>.Get().Formulas.GetHeals(Characteristics);
     }
-
-    public struct UpdateInventory
-    {
-        public NetworkLinkedList<ItemDesc> value;
-    }
-
-    [Serializable]
-    public struct ItemDesc : INetworkStruct
-    {
-        [Networked]
-        public int Id { get; set; }
-        [Networked]
-        public NetworkString<_32> ItemId { get; set; }
-    }
-    
 }

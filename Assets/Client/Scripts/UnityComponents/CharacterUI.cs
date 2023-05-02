@@ -25,13 +25,16 @@ namespace LD52
 
         public void Refresh(Character character)
         {
-            PlayerTitle.text = $"{character.transform.name} (lvl{character.Characteristics.Level})";
+            PlayerTitle.text = $"{character.LocalizedName} <alpha=#88>Level {character.Characteristics.Level}";
             HpBar.normalizedValue = (float) (character.Health / character.MaxHeals);
         }
 
         private void LookAtCamera()
         {
-            transform.LookAt(Camera.transform);
+            if (Camera)
+            {
+                transform.LookAt(Camera.transform);
+            }
         }
     }
 }

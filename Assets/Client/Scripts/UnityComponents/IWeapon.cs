@@ -1,6 +1,5 @@
 ﻿using System;
 using Fusion;
-using LeopotamGroup.Globals;
 using UnityEngine;
 
 namespace LD52
@@ -14,20 +13,5 @@ namespace LD52
         string DataID {get; set;}
         void StartAttack();
         void EndAttack();
-    }
-
-    static class WeaponExtensions
-    {
-        public static WeaponData GetData(this IWeapon weapon)
-        {
-            if (weapon == default)
-            {
-                return default;
-            }
-            
-            var staticData = Service<StaticData>.Get();
-            var item = staticData.AllItems.GetItemById(weapon.DataID);
-            return item as WeaponData;
-        }
     }
 }

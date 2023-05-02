@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 
 namespace LD52
 {
@@ -11,10 +13,19 @@ namespace LD52
             Instance = this;
         }
 
+        private IEnumerator Start()
+        {
+            yield return new WaitForSeconds(2);
+            Loading.SetActive(false);
+            HUD.gameObject.SetActive(true);
+        }
+
         public QuestBoard QuestBoard;
         public QuestWindow QuestWindow;
         public InventoryView InventoryView;
         public DiaryView DiaryView;
         public HUD HUD;
+        public GameObject Loading;
+        public WinScreen WinScreen;
     }
 }

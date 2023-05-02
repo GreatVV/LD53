@@ -18,23 +18,44 @@ namespace LD52
         
         public void Init()
         {
-            var runner = Object.Instantiate(_staticData.RunnerPrefab);
+            NetworkRunner runner = Object.FindFirstObjectByType<NetworkRunner>();
+            if (!runner)
+            {
+                runner = Object.Instantiate(_staticData.RunnerPrefab);
+                var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
+                if (sceneManager == null) {
+                    Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerDefault)}.", runner);
+                    sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
+                }
+                
+                StartGameArgs gameArgs = new StartGameArgs()
+                {
+                    GameMode = GameMode.AutoHostOrClient,
+                    Scene = SceneManager.GetActiveScene().buildIndex,
+                    SceneManager = sceneManager,
+                    Initialized = OnInitialized
+                };
+                runner.StartGame(gameArgs);
+            }
+            else
+            {
+                if (runner.IsServer)
+                {
+                    foreach (var player in runner.ActivePlayers)
+                    {
+                        var position = _sceneData.PlayerSpawnPosition.position;
+                        runner.Spawn(_staticData.Player, position, _sceneData.PlayerSpawnPosition.rotation, inputAuthority:player, onBeforeSpawned: (r, obj) =>
+                        {
+                            r.SetPlayerObject(player, obj);
+                        });
+                    }
+                }
+            }
             runner.AddCallbacks(this);
             
-            var sceneManager = runner.GetComponents(typeof(MonoBehaviour)).OfType<INetworkSceneManager>().FirstOrDefault();
-            if (sceneManager == null) {
-                Debug.Log($"NetworkRunner does not have any component implementing {nameof(INetworkSceneManager)} interface, adding {nameof(NetworkSceneManagerDefault)}.", runner);
-                sceneManager = runner.gameObject.AddComponent<NetworkSceneManagerDefault>();
-            }
+         
 
-            StartGameArgs gameArgs = new StartGameArgs()
-            {
-                GameMode = GameMode.AutoHostOrClient,
-                Scene = SceneManager.GetActiveScene().buildIndex,
-                SceneManager = sceneManager,
-                Initialized = OnInitialized
-            };
-            runner.StartGame(gameArgs);
+          
             _runtimeData.Runner = runner;
         }
 
@@ -52,7 +73,6 @@ namespace LD52
             if (runner.IsServer)
             {
                 var position = _sceneData.PlayerSpawnPosition.position;
-                Debug.Log(position);
                 runner.Spawn(_staticData.Player, position, _sceneData.PlayerSpawnPosition.rotation, inputAuthority:player, onBeforeSpawned: (r, obj) =>
                 {
                     r.SetPlayerObject(player, obj);

@@ -9,6 +9,10 @@ namespace LD52
     {
         [Networked, Capacity(4)]
         public NetworkLinkedList<Quest> TakenQuests { get; }
+        
+        public ParticleSystem TakeQuestParticle;
+        public ParticleSystem TakeItemParticle;
+        public ParticleSystem DeliverItemParticle;
 
         private bool CanOpenQuestBoard = true;
 
@@ -32,10 +36,11 @@ namespace LD52
                     {
                         if (takenQuest.QuestState == QuestState.NeedItem)
                         {
-                            if (takenQuest.From == questGiver)
+                            if (takenQuest.From == questGiver.Object.Id)
                             {
-                                Debug.Log("Try to take item from quest giver");
+                                Debug.Log($"Try to take item from {takenQuest.GetFromLocalizedName()} quest giver");
                                 Service<RuntimeData>.Get().Diary.AddEntry(new TakeQuestItemEntry(takenQuest));
+                                TakeItemParticle.Play();
                                 QuestManager.Instance.RPC_TakeItemForQuest(this, takenQuest);
                             }
                         }
@@ -52,6 +57,7 @@ namespace LD52
                             if (takenQuest.To == questTarget)
                             {
                                 Debug.Log("Try give item to quest target");
+                                DeliverItemParticle.Play();
                                 RPC_FinishQuest(this, takenQuest);
                                 Service<RuntimeData>.Get().Diary.AddEntry(new FinishQuestEntry(takenQuest));
                             }
@@ -95,6 +101,8 @@ namespace LD52
                 var characteristics = character.Characteristics;
                 characteristics.Exp += takenQuest.XPReward;
                 character.Characteristics = characteristics;
+
+                QuestManager.Instance.RPC_FinishQuest();
             }
         }
 

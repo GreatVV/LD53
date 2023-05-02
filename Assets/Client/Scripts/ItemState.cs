@@ -14,7 +14,7 @@ namespace LD52
 
         public string GetDescription()
         {
-            return $"Cool {ItemDescription.LocalizedName}";
+            return $"{ItemDescription.LocalizedName}";
         }
     }
 }

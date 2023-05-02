@@ -14,6 +14,7 @@ namespace LD52
         public Quester Quester;
         public Button Button;
         public GameObject CantTakeRoot;
+        public Image Icon;
 
         private void Start()
         {
@@ -30,6 +31,7 @@ namespace LD52
             Quest = quest;
             Quester = quester;
             Text.text = quest.ToDescription();
+            Icon.sprite = quest.GetItemIcon();
             CantTakeRoot.SetActive(!CanTakeQuest());
         }
 
@@ -53,7 +55,7 @@ namespace LD52
 
         public bool CanTakeQuest()
         {
-            if (Quest.QuestState == QuestState.ReadyToBeTaken)
+            if (Quest.QuestState == QuestState.ReadyToBeTaken && Quester.TakenQuests.Count < Quester.TakenQuests.Capacity)
             {
                 var staticData = Service<StaticData>.Get();
                 var items = staticData.Items;
@@ -76,6 +78,7 @@ namespace LD52
             if (CanTakeQuest())
             {
                 Service<RuntimeData>.Get().Diary.AddEntry(new QuestDiaryEntry(Quest));
+                Quester.TakeQuestParticle.Play();
                 QuestManager.Instance.RPC_GiveQuestToPlayer(Quester, Quest);
             }
         }

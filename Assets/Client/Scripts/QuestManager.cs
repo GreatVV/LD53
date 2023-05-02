@@ -15,23 +15,37 @@ namespace LD52
         [Networked][Capacity(8)] public NetworkLinkedList<Quest> PossibleQuests { get; }
         
         [Networked] public int MaxQuests { get; set; }
+        [Networked(OnChanged = nameof(QuestToWinChanged))] public int QuestsToWin { get; set; }
+
+        public int StartQuestToWin = 3;
 
         public QuestTarget[] Targets;
         public QuestGiver[] Givers;
+        public float RegenerationTime = 10;
         public static QuestManager Instance;
+        public float TimeForRestart = 15;
+
+        public TickTimer RestartTimer;
+
+        public static void QuestToWinChanged(Changed<QuestManager> changed)
+        {
+            UI.Instance.HUD.MissionText.text = string.Format(UI.Instance.HUD.Phrase, changed.Behaviour.QuestsToWin);
+        }
 
         public override void Spawned()
         {
             if (Runner.IsServer)
             {
+                QuestsToWin = StartQuestToWin;
                 Targets = FindObjectsOfType<QuestTarget>();
                 Givers = FindObjectsOfType<QuestGiver>();
                 for (int i = 0; i < MaxQuests; i++)
                 {
                     TryGenerateNewQuest();
                 }
+                _regenerateQuestTimer = TickTimer.CreateFromSeconds(Runner, RegenerationTime);
             }
-
+            UI.Instance.HUD.MissionText.text = string.Format(UI.Instance.HUD.Phrase, QuestsToWin);
             Instance = this;
         }
 
@@ -40,8 +54,11 @@ namespace LD52
             base.Despawned(runner, hasState);
             Instance = default;
         }
+        
 
         public static int UniversalId = 5;
+        private TickTimer _regenerateQuestTimer;
+
         public void TryGenerateNewQuest()
         {
             if (Runner.IsServer)
@@ -59,6 +76,27 @@ namespace LD52
                     quest.ItemID = possibleItems[range];
                     quest.XPReward = 1000;
                     PossibleQuests.Add(quest);
+                }
+            }
+        }
+
+        public override void FixedUpdateNetwork()
+        {
+            base.FixedUpdateNetwork();
+            if (Runner.IsServer)
+            {
+                if (_regenerateQuestTimer.Expired(Runner))
+                {
+                    for (int i = PossibleQuests.Count; i < MaxQuests; i++)
+                    {
+                        TryGenerateNewQuest();
+                    }
+                    _regenerateQuestTimer = TickTimer.CreateFromSeconds(Runner, RegenerationTime);
+                }
+
+                if (IsWin && RestartTimer.Expired(Runner))
+                {
+                    Runner.SetActiveScene(1);
                 }
             }
         }
@@ -89,27 +127,61 @@ namespace LD52
             Service<EcsWorld>.Get().NewEntity().Get<TryToOpenQuestBoardEvent>().value = this;
         }
 
-        public void RPC_TakeItemForQuest(Quester quester, Quest takenQuest)
+        private void Update()
+        {
+            if (Application.isEditor)
+            {
+                if (Input.GetKeyDown(KeyCode.W))
+                {
+                    RPC_FinishQuest();
+                }
+            }
+        }
+
+        public void RPC_TakeItemForQuest(Quester quester, Quest quest)
         {
             if (Runner.IsServer)
             {
-                takenQuest.QuestState = QuestState.Delivering;
                 for (var index = 0; index < quester.TakenQuests.Count; index++)
                 {
-                    var questerTakenQuest = quester.TakenQuests[index];
-                    if (questerTakenQuest.Id == takenQuest.Id)
+                    var takenQuest = quester.TakenQuests[index];
+                    if (takenQuest.Id == quest.Id)
                     {
-                        quester.TakenQuests.Set(index, takenQuest);
+                        quest.QuestState = QuestState.Delivering;
+                        quester.TakenQuests.Set(index, quest);
                     }
                 }
                 quester.GetComponent<Character>().Items.Add(new ItemDesc()
                 {
                     Id = UniversalId++,
-                    ItemId = takenQuest.ItemID
+                    ItemId = quest.ItemID
                 });
             }
         }
-    }
 
-    
+        [Rpc]
+        public void RPC_FinishQuest()
+        {
+            if (Runner.IsServer)
+            {
+                QuestsToWin--;
+                if (QuestsToWin <= 0)
+                {
+                    IsWin = true;
+                    RestartTimer = TickTimer.CreateFromSeconds(Runner, TimeForRestart);
+                    RPC_ShowWinScreen();
+                }
+            }
+        }
+
+        [Networked]
+        public NetworkBool IsWin { get; set; }
+
+        [Rpc(RpcSources.All, RpcTargets.All)]
+        private void RPC_ShowWinScreen()
+        {
+            Boss.Instance.PlayDeath();
+            UI.Instance.WinScreen.Show(TimeForRestart);
+        }
+    }
 }

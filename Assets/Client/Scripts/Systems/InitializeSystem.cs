@@ -19,7 +19,7 @@ namespace LD52
 
             _runtimeData.Diary.AddEntry(new StartDiaryEntry());
 
-            Object.Instantiate(_staticData.UI);
+            //Object.Instantiate(_staticData.UI);
         }
     }
 }

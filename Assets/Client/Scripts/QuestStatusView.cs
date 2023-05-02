@@ -1,6 +1,7 @@
 ﻿using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace LD52
 {
@@ -8,10 +9,12 @@ namespace LD52
     {
         public TMP_Text Description;
         public TMP_Text Status;
+        public Image Icon;
         
         public void Set(Quest quest)
         {
             Description.text = quest.ToDescription();
+            Icon.sprite = quest.GetItemIcon();
             string status;
             switch (quest.QuestState)
             {
