@@ -13,6 +13,11 @@ namespace LD52
             Instance = this;
         }
 
+        private void OnDestroy()
+        {
+            Instance = default;
+        }
+
         private IEnumerator Start()
         {
             yield return new WaitForSeconds(2);

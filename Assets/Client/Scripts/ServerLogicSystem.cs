@@ -187,6 +187,21 @@ namespace LD52
 
                 Log.Debug($"Resume SceneObject: {sceneObject.name}");
             }
+            
+            if (runner.IsServer)
+            {
+                foreach (var player in runner.ActivePlayers)
+                {
+                    if (!runner.GetPlayerObject(player).TryGetBehaviour(out Character behaviour))
+                    {
+                        var position = _sceneData.PlayerSpawnPosition.position;
+                        runner.Spawn(_staticData.Player, position, _sceneData.PlayerSpawnPosition.rotation, inputAuthority:player, onBeforeSpawned: (r, obj) =>
+                        {
+                            r.SetPlayerObject(player, obj);
+                        });
+                    }
+                }
+            }
 
             Log.Debug("Resume Simulation DONE");
         }
